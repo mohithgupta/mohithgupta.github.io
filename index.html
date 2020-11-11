@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <title>Portfolio Website</title>
+</head>
+
+<body>
+
+  <header id="home" class="header">
+
+    <nav class="nav" id="navbar">
+      <div class="navigation container">
+        <div class="logo">
+          <h1>MY PORTFOLIO</h1>
+        </div>
+
+        <div class="menu">
+          <div class="top-nav">
+            <div class="logo">
+              <h1>MY PORTFOLIO</h1>
+            </div>
+            <div class="close">
+              <i class="fas fa-times"></i>
+            </div>
+          </div>
+
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="#home" class="nav-link scroll-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="#about" class="nav-link scroll-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="#projects" class="nav-link scroll-link">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a href="#skills" class="nav-link scroll-link">Skills</a>
+            </li>
+            <li class="nav-item">
+              <a href="#contact" class="nav-link scroll-link">Contact</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="hamburger">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </nav>
+
+    <div class="me" id="home">
+      <h3>Hello, my name is</h3>
+      <h1>Mohith Gupta</h1>
+      <h4><span id="type1"></span></h4>
+      <a href="#contact">Contact Me</a>
+    </div>
+
+    <img class="mypic" src="images/me2.jpeg" alt="my pic" />
+
+    <div class="social-icons">
+      <a href="http://github.com/mohithgupta"><i class="fab fa-github"></i></a>&ensp;&ensp;
+      <a href="https://twitter.com/tobeawebdev"><i class="fab fa-twitter"></i></a>&ensp;&ensp;
+      <a href="https://www.linkedin.com/in/mohith-gupta-korangi-8815a2197/"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </header>
+
+  <section class="section about" id="about">
+    <img class="mobile-mypic" src="images/me2.jpeg" alt="my pic" />
+    <div class="title">
+      <h1>About me</h1>
+    </div>
+
+    <div class="about-div">
+
+      <div class="about-right" data-aos="fade-left" data-aos-duration="2000" data-aos-once="true">
+        <h1>Hey, Hi...I'm Mohith. <br> I can <span id="type2"></span></h1>
+        <p>
+          Right now, I'm pursuing Chemical Engineering at NIT Warangal.
+          I'm 19 years young (yes you read it right, "young" not "old")<br />
+          This portfolio was my second attempt, I'm working on a better portfolio right now
+          (with many more animations, who doesn't love animations??)
+          <br />
+          Have a look around.
+          Ping me if you have a front end project in your mind. I'ld be more then happy to help.
+        </p>
+        <a href="#contact" class="btn">Ping me</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section projects-section">
+    <div class="title">
+      <h1>My Projects</h1>
+    </div>
+    <div class="projects-div" id="projects">
+
+      <div class="project1 project" data-aos="fade-down" data-aos-duration="2000" data-aos-once="true">
+        <a>
+          <p>SMP Website</p>
+        </a>
+        <a href="https://mohithgupta.github.io/ourcollegewebsite/" target="_blank" rel="noreferrer"><img src="images/smp.png" alt="website pic">
+        </a>
+      </div>
+      <div class="project2 project" data-aos="fade-right" data-aos-duration="2000" data-aos-once="true">
+        <a>
+          <p>To-Do App with React</p>
+        </a>
+        <a href="https://mohithgupta.github.io/todoreactapp/" target="_blank" rel="noreferrer"><img src=" images/todo.png" alt="website pic"></a>
+      </div>
+      <div class="project3 project" data-aos="fade-left" data-aos-duration="2000" data-aos-once="true">
+        <a>
+          <p>Games similar to the Simon Game</p>
+        </a>
+        <a href="https://mohithgupta.github.io/simonlikegames/" target="_blank" rel="noreferrer"><img src="images/simon.png" alt="website pic"></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section skills" id="skills">
+    <div class="title">
+      <h1>Main Skills</h1>
+    </div>
+
+    <div class="skills-center container">
+
+      <div class="skills-box" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+
+        <img src="skill-icons/html5.svg" class="skill-icon" alt="html5 icon">
+        <h4>HTML5</h4>
+
+      </div>
+      <div class="skills-box" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+        <img src="skill-icons/css3.svg" class="skill-icon" alt="css3 icon">
+        <h4>CSS</h4>
+      </div>
+      <div class="skills-box js-skill-box" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
+        <img src="skill-icons/js.svg" class="skill-icon js-icon" alt="javascript icon">
+        <h4>JavaScript</h4>
+
+      </div>
+
+    </div>
+  </section>
+
+
+  <section class="section contact-section" id="contact">
+    <div class="title">
+      <h1>Contact me</h1>
+    </div>
+
+    <div class="contact-div container">
+
+      <div class="contacts" data-aos="fade-down-right" data-aos-duration="2000" data-aos-once="true">
+        <div>
+          <span class="icon"><i class="fas fa-user"></i> </span>
+          <span class="content">
+            <span> Mohith Gupta</span>
+          </span>
+        </div>
+
+        <div>
+          <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+          <span class="content">
+            <span> 35-5-41, 533101, Rajahmundry, Andhra Pradesh, India</span>
+          </span>
+        </div>
+
+        <div>
+          <span class="icon"><i class="fas fa-envelope"></i></span>
+          <span class="content">
+            <span> mohithguptak@gmail.com</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="right" data-aos="fade-up-left" data-aos-duration="2000" data-aos-once="true">
+        <form method="POST" action="https://formspree.io/f/maylbneq" class="form" id="my-form">
+          <h2>Ping me up!! <br>I'ld love to hear from you!!</h2>
+          <input type="text" placeholder="Name" name="Name" />
+          <input type="email" inputmode="email" placeholder="Email" name="Email" />
+          <input type="text" placeholder="Subject" />
+          <textarea name="message" cols="10" rows="20" placeholder="Text"></textarea>
+
+          <button type="submit" class="btn" id="submit-button">Ping me</button>
+        </form>
+        <div id="my-form-status" class="status-div"></div>
+      </div>
+    </div>
+  </section>
+  <hr>
+  <footer>
+    <p>Created with ❤ by <span>Mohith</span> | &copy; 2020 All rights reserved.</p>
+  </footer>
+
+  <!-- AOS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <!-- Typeit -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/typeit/7.0.4/typeit.min.js"></script>
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+
+  <script src="index.js"></script>
+</body>
+
+</html>
