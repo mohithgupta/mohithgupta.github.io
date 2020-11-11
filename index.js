@@ -23,7 +23,7 @@ new TypeIt("#type1", {
   loop: true,
   waitUntilVisible: true,
 })
-  .type("I love to Design", { delay: 400 })
+  .type("I'm a Student", { delay: 400 })
   .pause(1000)
   .delete(20)
   .pause(10)
@@ -31,7 +31,7 @@ new TypeIt("#type1", {
   .pause(1000)
   .delete(20)
   .pause(10)
-  .type("I'm a Student", { delay: 400 })
+  .type("I love to Design", { delay: 400 })
   .pause(1000)
   .delete(20)
   .go();
@@ -52,7 +52,7 @@ new TypeIt("#type2", {
 .type("Javascript", { delay: 400 })
 .pause(1000)
 .delete(12)
-.type("Gsap", { delay: 400 })
+.type("GSAP", { delay: 400 })
 .pause(1000)
 .delete(9)
 .pause(10)
@@ -63,7 +63,7 @@ new TypeIt("#type2", {
 .type("Git", { delay: 400 })
 .pause(1000)
 .delete(9)
-.go()
+.go();
 
 
 gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
