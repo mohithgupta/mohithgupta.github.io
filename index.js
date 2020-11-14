@@ -3,28 +3,31 @@ AOS.init();
 const menu = document.querySelector(".menu");
 const navOpen = document.querySelector(".hamburger");
 const navClose = document.querySelector(".close");
+const navlinks = document.querySelectorAll(".scroll-link");
+const nav_arr_length = navlinks.length;
 
-function checkWindowsize(){
+function checkedWindowsize(){
   var navLeftwidth = menu.getBoundingClientRect().left;
 navOpen.addEventListener("click", () => {
-  if (navLeftwidth < 0) {
     menu.classList.toggle("show");
-  }
+    for(var i=0;i<nav_arr_length;i++){
+      navlinks[i].addEventListener("click",() => {
+        menu.classList.remove("show")
+      })
+    }
 });
 navClose.addEventListener("click", () => {
-  if (navLeftwidth < 0) {
     menu.classList.remove("show");
-  }
 });
 }
 
-if(window.innerWidth<770){
-checkWindowsize();
+if(window.innerWidth<770){ // when opened directly in a small screen
+checkedWindowsize();
 }
 
-window.addEventListener("resize",function(){
+window.addEventListener("resize",function(){ // when screen is resized
     if(window.innerWidth<770){
-  checkWindowsize();
+  checkedWindowsize();
 }
 });
 
