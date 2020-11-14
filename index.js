@@ -4,18 +4,30 @@ const menu = document.querySelector(".menu");
 const navOpen = document.querySelector(".hamburger");
 const navClose = document.querySelector(".close");
 
-const navLeft = menu.getBoundingClientRect().left;
+function checkWindowsize(){
+  var navLeftwidth = menu.getBoundingClientRect().left;
 navOpen.addEventListener("click", () => {
-  if (navLeft < 0) {
+  if (navLeftwidth < 0) {
     menu.classList.toggle("show");
   }
 });
-
 navClose.addEventListener("click", () => {
-  if (navLeft < 0) {
+  if (navLeftwidth < 0) {
     menu.classList.remove("show");
   }
 });
+}
+
+if(window.innerWidth<770){
+checkWindowsize();
+}
+
+window.addEventListener("resize",function(){
+    if(window.innerWidth<770){
+  checkWindowsize();
+}
+});
+
 
 
 new TypeIt("#type1", {

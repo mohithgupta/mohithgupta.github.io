@@ -108,8 +108,7 @@ text-decoration: underline;
 }
 
 .hamburger {
-  display: none;
-
+display: none;
 }
 
 @media only screen and (max-width: 1000px) {
