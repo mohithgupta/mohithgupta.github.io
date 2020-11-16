@@ -70,9 +70,9 @@
     <img class="mypic" src="images/me2.jpeg" alt="my pic" />
 
     <div class="social-icons">
-      <a href="http://github.com/mohithgupta"><i class="fab fa-github"></i></a>&ensp;&ensp;
-      <a href="https://twitter.com/tobeawebdev"><i class="fab fa-twitter"></i></a>&ensp;&ensp;
-      <a href="https://www.linkedin.com/in/mohith-gupta-korangi-8815a2197/"><i class="fab fa-linkedin-in"></i></a>
+      <a href="http://github.com/mohithgupta" target="_blank" rel="noreferrer"><i class="fab fa-github"></i></a>&ensp;&ensp;
+      <a href="https://twitter.com/tobeawebdev" target="_blank" rel="noreferrer"><i class="fab fa-twitter"></i></a>&ensp;&ensp;
+      <a href="https://www.linkedin.com/in/mohith-gupta-korangi-8815a2197/" target="_blank" rel="noreferrer"><i class="fab fa-linkedin-in"></i></a>
     </div>
   </header>
 
@@ -108,23 +108,22 @@
     <div class="projects-div" id="projects">
 
       <div class="project1 project" data-aos="fade-down" data-aos-duration="2000" data-aos-once="true">
-        <a>
+
           <p>SMP Website</p>
-        </a>
-        <a href="https://mohithgupta.github.io/ourcollegewebsite/" target="_blank" rel="noreferrer"><img src="images/smp.png" alt="website pic" loading="lazy">
+        <a href="https://mohithgupta.github.io/ourcollegewebsite/" target="_blank" rel="noreferrer"><img src="images/smp.png" alt="website pic 1" >
         </a>
       </div>
       <div class="project2 project" data-aos="fade-right" data-aos-duration="2000" data-aos-once="true">
-        <a>
+       
           <p>To-Do App with React</p>
-        </a>
-        <a href="https://mohithgupta.github.io/todoreactapp/" target="_blank" rel="noreferrer"><img src=" images/todo.png" alt="website pic" loading="lazy"></a>
+     
+        <a href="https://mohithgupta.github.io/todoreactapp/" target="_blank" rel="noreferrer"><img src=" images/todo.png" alt="website pic 2" ></a>
       </div>
       <div class="project3 project" data-aos="fade-left" data-aos-duration="2000" data-aos-once="true">
-        <a>
+      
           <p>Games similar to the Simon Game</p>
-        </a>
-        <a href="https://mohithgupta.github.io/simonlikegames/" target="_blank" rel="noreferrer"><img src="images/simon.png" alt="website pic" loading="lazy"></a>
+     
+        <a href="https://mohithgupta.github.io/simonlikegames/" target="_blank" rel="noreferrer"><img src="images/simon.png" alt="website pic 3" ></a>
       </div>
 
     </div>
@@ -140,16 +139,16 @@
 
       <div class="skills-box" data-aos="fade-right" data-aos-duration="1000" data-aos-once="true">
 
-        <img src="skill-icons/html5.svg" class="skill-icon" alt="html5 icon" loading="lazy">
+        <img src="skill-icons/html5.svg" class="skill-icon" alt="html5 icon" >
         <h4>HTML5</h4>
 
       </div>
       <div class="skills-box" data-aos="zoom-out" data-aos-duration="1000" data-aos-once="true">
-        <img src="skill-icons/css3.svg" class="skill-icon" alt="css3 icon" loading="lazy">
+        <img src="skill-icons/css3.svg" class="skill-icon" alt="css3 icon" >
         <h4>CSS</h4>
       </div>
       <div class="skills-box js-skill-box" data-aos="fade-left" data-aos-duration="1000" data-aos-once="true">
-        <img src="skill-icons/js.svg" class="skill-icon js-icon" alt="javascript icon" loading="lazy">
+        <img src="skill-icons/js.svg" class="skill-icon js-icon" alt="javascript icon" >
         <h4>JavaScript</h4>
 
       </div>
@@ -191,11 +190,10 @@
       <div class="right" data-aos="fade-up-left" data-aos-duration="2000" data-aos-once="true">
         <form method="POST" action="https://formspree.io/f/maylbneq" class="form" id="my-form">
           <h2>Ping me up!! <br>I'ld love to hear from you!!</h2>
-          <input type="text" placeholder="Name" name="Name" />
-          <input type="email" inputmode="email" placeholder="Email" name="Email" />
-          <input type="text" placeholder="Subject" />
-          <textarea name="message" cols="10" rows="20" placeholder="Text"></textarea>
-
+          <label for="Name"><input type="text" placeholder="Name" name="Name" required/></label>
+          <label for="Email"><input type="email" inputmode="email" placeholder="Email" name="Email" required /></label>       
+          <label for="Subject"><input type="text" placeholder="Subject" name="Subject" required/></label>
+          <label for="Message"><textarea name="Message" cols="10" rows="20" placeholder="Text"></textarea></label>
           <button type="submit" class="btn" id="submit-button">Ping me</button>
         </form>
         <div id="my-form-status" class="status-div"></div>
