@@ -206,6 +206,7 @@ display: none;
   left : 5%;
   transform: translate(25%, -50%);
   color: #fff;
+  line-height: 1.3;
 }
 
 .me p.my-name-text {
@@ -213,7 +214,7 @@ display: none;
 }
 
 .me p.my-name {
-  font-size: 4rem;
+  font-size: 4.3rem;
 }
 
 .me p.typeit1 span {
