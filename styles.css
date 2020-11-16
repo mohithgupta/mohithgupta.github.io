@@ -68,7 +68,7 @@ li {
 }
 
 .nav {
-  padding: 2.3rem 13rem 1.6rem 5rem;
+  padding: 2.3rem 16rem 1.6rem 5rem;
   position: fixed;
   top: 0;
   left: 0;
@@ -246,7 +246,6 @@ display: none;
   width: 40rem;
   z-index: -1;
 }
-
 .social-icons {
   position: absolute;
   bottom: 10%;
