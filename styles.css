@@ -396,13 +396,13 @@ a.btn {
   border-radius: 0.5rem;
   border: 2px solid #710071;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-  transition: all 300ms ease-in-out;
 }
 
 a.btn:hover {
   transform: translateY(-3px);
   background-color: transparent;
   color: inherit;
+  transition: all 300ms ease-in-out;
 }
 
 a.btn:active {
@@ -461,12 +461,12 @@ overflow: hidden;
 cursor: pointer;
 position: relative;
 }
-.project1{
+/*.project2{
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
-.project img{
+*/.project img{
   position: relative;
   top:2px;
   transition: all 300ms ease-in-out;

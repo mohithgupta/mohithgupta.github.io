@@ -56,14 +56,7 @@ new TypeIt("#type2", {
   loop: true,
   waitUntilVisible: true,
 })
-.type("HTML", { delay: 400 })
-.pause(1000)
-.delete(9)
-.pause(10)
-.type("CSS", { delay: 400 })
-.pause(1000)
-.delete(9)
-.pause(10)
+
 .type("Javascript", { delay: 400 })
 .pause(1000)
 .delete(12)
@@ -78,6 +71,9 @@ new TypeIt("#type2", {
 .type("Git", { delay: 400 })
 .pause(1000)
 .delete(9)
+.type("do some more", { delay: 400 })
+.pause(1000)
+.delete(12)
 .go();
 
 
