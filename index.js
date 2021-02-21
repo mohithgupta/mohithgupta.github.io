@@ -9,7 +9,9 @@ const nav_arr_length = navlinks.length;
 function checkedWindowsize(){
   var navLeftwidth = menu.getBoundingClientRect().left;
 navOpen.addEventListener("click", () => {
-    menu.classList.toggle("show");
+  
+    menu.classList.add("show");
+    
     for(var i=0;i<nav_arr_length;i++){
       navlinks[i].addEventListener("click",() => {
         menu.classList.remove("show")
@@ -26,7 +28,9 @@ checkedWindowsize();
 }
 
 window.addEventListener("resize",function(){ // when screen is resized
+// console.log(window.innerWidth);
     if(window.innerWidth<770){
+      // console.log("checked size");
   checkedWindowsize();
 }
 });
@@ -80,9 +84,7 @@ new TypeIt("#type2", {
 gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
 gsap.from(".hamburger", { opacity: 0, duration: 1, delay: 1, x: 20 });
 gsap.from(".mypic", { opacity: 0, duration: 1, delay: 1.5, x: -200 });
-gsap.from(".me h3", { opacity: 0, duration: 1, delay: 1.5, y: -50 });
 gsap.from(".me p", { opacity: 0, duration: 1, delay: 2, y: -45 });
-gsap.from(".me h4", { opacity: 0, duration: 1, delay: 2.5, y: -30 });
 gsap.from(".me a", { opacity: 0, duration: 1, delay: 3, y: 50 });
 gsap.from(".nav-item", {  opacity: 0,duration: 1,  delay: 1.2,y:30,  stagger: 0.2,});
 gsap.from(".social-icons a", {   opacity: 0,  duration: 1,  delay: 1.2,  stagger: 0.2,});

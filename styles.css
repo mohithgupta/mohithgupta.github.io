@@ -157,8 +157,8 @@ display: none;
   }
 
   .hamburger {
-    border:1px solid white;
-    border-radius:8px;
+   /* border:1px solid white;
+    border-radius:8px;*/
     display: block;
     color: #fff;
     font-size: 2.6rem;
