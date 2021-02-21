@@ -21,8 +21,11 @@ body {
   position: relative;
   z-index: 1;
 }
+div.navigation>.logo>.logo-text{
+  margin-left: 80%;
+}
 p.logo-text{
-  font-size: 2.4rem 
+  font-size: 3rem 
 }
 p.main-headings{
   font-size: 3rem;
@@ -48,12 +51,9 @@ li {
 
 .about-div {
   max-width: 120rem;
-  margin: 0 auto;
+  margin: 0 auto 50px;
+  padding: 0 3rem;
 }
-
-  .about-div {
-    padding: 0 3rem;
-  }
 
 /* Header */
 
@@ -99,7 +99,7 @@ li {
 .nav-link:visited {
   color: #fff;
   font-weight :500;
-  font-size: 1.8rem;
+  font-size: 2.4rem;
   padding: 0.8rem 1rem;
   transition: all 300ms ease-in-out;
 }
@@ -157,10 +157,12 @@ display: none;
   }
 
   .hamburger {
+    border:1px solid white;
+    border-radius:8px;
     display: block;
     color: #fff;
     font-size: 2.6rem;
-    padding: 0.5rem;
+    padding: 0.7rem;
     cursor: pointer;
   }
 
@@ -242,7 +244,7 @@ display: none;
 .mypic {
   position: absolute;
   right: 10%;
-  bottom: 0;
+  bottom: 1%;
   width: 40rem;
   z-index: -1;
 }
@@ -330,14 +332,14 @@ display: block;
 }
 
 
-/* section */
+/* FOR ALL SECTIONS */
 
 .section {
   padding: 5rem 0 7rem 0;
   overflow-x: hidden;
 }
 
-/* About */
+/* ABOUT SECTION */
 
 .mobile-mypic{
   display :none;
@@ -377,6 +379,7 @@ display: block;
   line-height: 2;
   margin-bottom: 2rem;
   color: #333;
+  margin:20px auto;
 }
 
 p.typeit2{
@@ -388,6 +391,9 @@ p.typeit2{
   color: #710071;
 }
 
+.about-right>.btn{
+  margin-top:30px;
+}
 a.btn {
   display: inline-block;
   padding: 1rem 2rem;
@@ -399,9 +405,8 @@ a.btn {
 }
 
 a.btn:hover {
-  transform: translateY(-3px);
   background-color: transparent;
-  color: inherit;
+  color: #710071;
   transition: all 300ms ease-in-out;
 }
 
@@ -438,9 +443,10 @@ margin: 0 auto;
 
 }
 
-/* Projects */
+/* PROJECTS SECTION */
 
 .projects-section {
+  margin-top:50px;
   background-color: #000;
 }
 
@@ -466,7 +472,8 @@ position: relative;
   margin-left: auto;
   margin-right: auto;
 }
-*/.project img{
+*/
+.project img{
   position: relative;
   top:2px;
   transition: all 300ms ease-in-out;
@@ -519,7 +526,9 @@ position: relative;
   }
 }
 
-/* Skills */
+
+/* SKILLS SECTION */
+
 
 .skills-box{
   text-align: center;
@@ -546,7 +555,7 @@ position: relative;
 .skills-center {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 6rem;
+  /*grid-gap: 6rem;*/
 }
 
 @media only screen and (max-width: 768px) {
@@ -569,7 +578,7 @@ position: relative;
 .contact-div {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
+  /*gap: 3rem;*/
   padding: 0 3rem 0 10rem;
 }
 
