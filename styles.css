@@ -532,7 +532,7 @@ position: relative;
 
 .skills-box{
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .skills-box .skills-text {
@@ -554,7 +554,7 @@ position: relative;
 }
 .skills-center {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   /*grid-gap: 6rem;*/
 }
 

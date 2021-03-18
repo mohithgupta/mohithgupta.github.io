@@ -50,7 +50,7 @@ new TypeIt("#type1", {
   .pause(1000)
   .delete(20)
   .pause(10)
-  .type("I love to Design", { delay: 400 })
+  .type("I love Web Dev", { delay: 400 })
   .pause(1000)
   .delete(20)
   .go();
@@ -64,7 +64,7 @@ new TypeIt("#type2", {
 .type("Javascript", { delay: 400 })
 .pause(1000)
 .delete(12)
-.type("GSAP", { delay: 400 })
+.type("React", { delay: 400 })
 .pause(1000)
 .delete(9)
 .pause(10)
