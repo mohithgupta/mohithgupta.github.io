@@ -560,6 +560,7 @@ margin: 0 auto;
 @media only screen and (max-width:500px) {
   .project{
     width:120%;
+    margin-left:-10%;
   } 
   .project:before{
     background: rgba(255,255,255,0.3);
@@ -615,6 +616,7 @@ margin: 0 auto;
 }
 .contacts{
   line-height: 3;
+  margin: -20px 0 20px;
 }
 .contact-div {
   display: grid;
