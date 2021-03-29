@@ -518,7 +518,7 @@ margin: 0 auto;
   }
   .project:before{
     background:rgba(255,255,255,0.5);
-    width: 99%;
+    width: 98%;
     height: 10%;
     text-align: center;
     margin: auto;
@@ -553,13 +553,18 @@ margin: 0 auto;
 
 @media only screen and (max-width:650px) {
   .project{
-    width:95%;
+    width:105%;
   }
 }
 
 @media only screen and (max-width:500px) {
+  .project{
+    width:120%;
+  } 
   .project:before{
-    height: 13%;
+    background: rgba(255,255,255,0.3);
+    height: 15%;
+    font-size: 1.7rem;
   }
 }
 
