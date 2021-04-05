@@ -68,7 +68,7 @@ new TypeIt("#type2", {
 .pause(1000)
 .delete(9)
 .pause(10)
-.type("Bootstrap", { delay: 400 })
+.type("CSS", { delay: 400 })
 .pause(1000)
 .delete(9)
 .pause(10)
