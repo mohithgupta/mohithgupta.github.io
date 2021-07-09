@@ -61,25 +61,20 @@ new TypeIt("#type2", {
   waitUntilVisible: true,
 })
 
-.type("Javascript...", { delay: 400 })
+.type("C++", { delay: 400 })
 .pause(1000)
 .delete(13)
-.type("React...", { delay: 400 })
+.type("JavaScript", { delay: 400 })
 .pause(1000)
-.delete(9)
-.pause(10)
-.type("CSS...", { delay: 400 })
+.delete(13)
+.type("React", { delay: 400 })
 .pause(1000)
 .delete(9)
 .pause(10)
 .type("Git...", { delay: 400 })
 .pause(1000)
 .delete(9)
-.type("learn quick.", { delay: 400 })
-.pause(1000)
-.delete(12)
 .go();
-
 
 gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
 gsap.from(".hamburger", { opacity: 0, duration: 1, delay: 1, x: 20 });

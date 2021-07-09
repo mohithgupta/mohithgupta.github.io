@@ -704,10 +704,9 @@ margin: 0 auto;
   transition: all 300ms ease-in-out;
 }
 .form .btn:hover{
-  transform: translateY(-3px);
   background: none;
   cursor: pointer;
-  color: #260B4D;
+  color: #fff;
 
 }
 @media only screen and (max-width: 1010px) {
