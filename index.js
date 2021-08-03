@@ -1,5 +1,6 @@
 AOS.init();
 
+
 const menu = document.querySelector(".menu");
 const navOpen = document.querySelector(".hamburger");
 const navClose = document.querySelector(".close");
@@ -46,13 +47,16 @@ new TypeIt("#type1", {
   .pause(1000)
   .delete(20)
   .pause(10)
-  .type("I love to Explore and Build", { delay: 400 })
+  .type("I love to Explore", { delay: 400 })
   .pause(1000)
-  .delete(20)
+  .delete(7)
   .pause(10)
-  .type("Web Dev", { delay: 400 })
+  .type("Build", { delay: 400 })
   .pause(1000)
   .delete(20)
+  .type("I also write on Medium", { delay: 400 })
+  .pause(1000)
+  .delete(30)
   .go();
 
 new TypeIt("#type2", {
@@ -75,6 +79,10 @@ new TypeIt("#type2", {
 .pause(1000)
 .delete(9)
 .go();
+
+const d = new Date();
+document.getElementById("age").innerHTML = d.getFullYear()-2001 - (d.getMonth() >= 4 ? 0 : 1)  ;
+
 
 gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
 gsap.from(".hamburger", { opacity: 0, duration: 1, delay: 1, x: 20 });
