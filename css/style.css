@@ -3,17 +3,15 @@
 		- Buttons
 		- Page Title
 	- Header
-		- Desktop Navigation
-		- Mobile Navigation
+		- Desktop Version
+		- Mobile Version
 	- Pages
 		- Homepage
 		- About
-		    - Personal Info List
+		    - Personal Info 
 			- Box Stats
-			- Resume
 			- Skills
 		- Projects
-		    - Grid
         - Contact
             - Left Side
             - Contact Form
@@ -312,9 +310,13 @@ hr.separator {
     line-height: 32px;
 }
 
-.medium-link {
+.extra-link {
     color: #fff;
     text-decoration: underline;
+}
+
+.about-p .extra-link {
+    color: #5f27cd;
 }
 
 
@@ -471,6 +473,17 @@ hr.separator {
     color: #fff;
 }
 
+.more-proj {
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0 0 10px;
+}
+
+.more-proj a {
+    color: #5f27cd;
+    text-decoration: underline;
+}
+
 @media only screen and (max-width:1360px) {
     .project {
         width: 60%;
@@ -491,52 +504,19 @@ hr.separator {
 @media only screen and (max-width:800px) {
     .project {
         width: 85%;
-        opacity: 0.1;
     }
     .project:hover img {
         transform: scale(1);
         opacity: 1;
     }
-    .project:before {
-        width: 99%;
-        height: 20%;
-        text-align: center;
-        margin: auto;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        color: #000;
-        z-index: 100;
-        font-size: 2rem;
+    .project p {
+        position: static;
+        font-size: 1.3rem;
+        font-weight: 300;
+        text-decoration: underline;
     }
-    .project9:before {
-        content: "Download Google Drive Restricted PDFs";
-    }
-    .project8:before {
-        content: "Play YouTube videos in VLC with a click";
-    }
-    .project7:before {
-        content: "Github Search User App";
-    }
-    .project6:before {
-        content: "React Corona Trackcer App";
-    }
-    .project5:before {
-        content: "React Movie Watchlist App";
-    }
-    .project4:before {
-        content: "React Chat App";
-    }
-    .project3:before {
-        content: "React To Do App";
-    }
-    .project2:before {
-        content: "The Simon Game";
-    }
-    .project1:before {
-        content: "CRUD Form with Transitions";
+    .more-proj {
+        padding: 0 10px 0;
     }
 }
 
@@ -545,14 +525,7 @@ hr.separator {
         padding-top: 40px;
     }
     .project {
-        width: 98%;
-    }
-}
-
-@media only screen and (max-width:500px) {
-    .project:before {
-        /* height: 15%; */
-        font-size: 1.5rem;
+        width: 95%;
     }
 }
 
@@ -777,7 +750,8 @@ hr.separator {
         border-radius: 50%;
         width: 270px;
         height: 270px;
-        border: 4px solid #252525;
+        border: 4px solid #5f27cd;
+        ;
         object-fit: cover;
         object-position: 50% 30%;
         position: relative;
@@ -824,7 +798,8 @@ hr.separator {
         height: 2px;
         margin-bottom: 5px;
         position: relative;
-        background: #fff;
+        background: #5f27cd;
+        ;
         border-radius: 3px;
         z-index: 1;
         transform-origin: 5px 0;
