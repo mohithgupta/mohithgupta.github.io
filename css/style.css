@@ -268,7 +268,7 @@ hr.separator {
 }
 
 .home .bg {
-  background-image: url(../images/me.jpeg);
+  background-image: url(../images/me3.jpeg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -318,7 +318,7 @@ hr.separator {
 }
 
 .extra-link {
-  color: #fff;
+  color: #5f27cd;
   text-decoration: underline;
 }
 
@@ -341,6 +341,7 @@ hr.separator {
 
 .about-img-div{
   width: 90%;
+  height: 75%;
   align-self: center;
   justify-self: flex-end;  
 }
@@ -412,6 +413,14 @@ hr.separator {
   width: 30px;
   height: 1px;
   background: #777;
+}
+
+.about h3.custom-title{
+  font-size: 30px;
+}
+.about h3.custom-title span{
+  text-transform:none ;
+  font-size:15px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -568,15 +577,16 @@ hr.separator {
   font-weight: 400;
 }
 
-.contact ul.social {
+.contact ul.social{
   margin-left: -5px;
+  margin-top: 30px;
 }
 
-.contact ul.social li {
+ul.social li, ul.social li {
   display: inline-block;
 }
 
-.contact ul.social li a {
+ul.social li a{
   display: inline-block;
   height: 40px;
   width: 40px;
@@ -589,6 +599,26 @@ hr.separator {
   background: #2b2a2a;
   border-radius: 50%;
 }
+
+ul.social li a:hover {
+  background: #5f27cd;
+}
+
+.index-text ul.social{
+  margin-top: 30px
+}
+
+.about ul.social{
+  margin-top:50px;
+}
+
+.about ul.social li a, .index-text ul.social li a{
+  height: 47px;
+  width: 47px;
+  line-height: 47px;
+  font-size: 22px;
+}
+
 
 /* Form */
 
