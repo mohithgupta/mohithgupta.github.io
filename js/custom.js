@@ -8,17 +8,13 @@ new TypeIt("#type2", {
     waitUntilVisible: true,
 })
 
-
-.type("C++", { delay: 400 })
-    .pause(1000)
-    .delete(13)
-    .type("DSA", { delay: 400 })
+.type("React", { delay: 400 })
     .pause(1000)
     .delete(10)
     .type("JavaScript", { delay: 400 })
     .pause(1000)
     .delete(13)
-    .type("React", { delay: 400 })
+    .type("Blog", { delay: 400 })
     .pause(1000)
     .delete(9)
     .pause(10)
