@@ -115,6 +115,20 @@ hr.separator {
   text-decoration: none;
 }
 
+.btn-arrow{
+  text-decoration: none;
+  color:#fff;
+  margin-left:10px;
+}
+
+.btn-arrow:hover{
+  color:#fff;
+  text-decoration:none;
+}
+
+.btn-arrow:hover > i.fa-arrow-right{
+  margin-left:5px
+}
 /*** Page Title ***/
 
 .title-section {
@@ -321,13 +335,17 @@ hr.separator {
   font-size: 16px;
   line-height: 32px;
 }
+.my-name{
+  font-size: 35px;
+  font-family:Poppins;
+}
 
-.extra-link {
+.extra-links {
   color: #fff;
   text-decoration: underline;
 }
 
-.extra-link:hover {
+.extra-links:hover {
   color: #fff;
   text-decoration: none;
   transition: all 0.5s linear;
@@ -662,10 +680,6 @@ ul.social li a:hover {
   transition: 0.3s;
 }
 
-.contact .contactform .form-message {
-  margin: 24px 0;
-}
-
 .contact .contactform .output_message {
   display: block;
   color: #fff;
@@ -692,6 +706,12 @@ ul.social li a:hover {
   font-family: FontAwesome;
   content: "\f071";
   padding-right: 10px;
+}
+
+.copy-mail-link{
+  font-size: 12px;
+  text-decoration: underline;  
+  cursor: pointer;
 }
 
 /* [ RESPONSIVE DESIGN STYLES ] */
