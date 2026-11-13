@@ -1,0 +1,98 @@
+---
+// Drawn covers for projects whose interesting part is not a screen.
+import type { Poster } from "../data/projects";
+interface Props { kind: Poster }
+const { kind } = Astro.props;
+const book = [
+  { side: "ask", px: "2,418.60", qty: 120 }, { side: "ask", px: "2,418.20", qty: 340 }, { side: "ask", px: "2,417.90", qty: 75 },
+  { side: "bid", px: "2,417.40", qty: 210 }, { side: "bid", px: "2,417.10", qty: 460 }, { side: "bid", px: "2,416.80", qty: 90 },
+];
+const spark = [12, 18, 14, 22, 19, 27, 24, 31, 28, 35, 30, 38, 34, 41, 37, 44];
+const max = Math.max(...spark);
+const path = spark.map((v, i) => `${i ? "L" : "M"}${(i / (spark.length - 1)) * 300},${90 - (v / max) * 80}`).join(" ");
+const steps = ["Spec written with scenario ids", "Audit: clear", "Tests written first", "Build", "Review: no blockers", "Live QA with evidence", "Local CI on the head commit", "Merged with a merge commit"];
+---
+<div class={`poster p-${kind}`} role="img" aria-label={
+  kind === "endprs" ? "Illustration: a review comment answered by an automatic fix commit" :
+  kind === "harness" ? "Illustration: a change passing each stage of the harness" :
+  "Illustration: a live order book and price line"}>
+  {kind === "endprs" && (
+    <div class="pr">
+      <div class="pr-row">
+        <span class="av av-r" aria-hidden="true">R</span>
+        <div class="bubble">
+          <p class="who">reviewer <span class="muted">commented on src/profile.ts</span></p>
+          <p><code>user</code> can be null after logout. Handle it?</p>
+        </div>
+      </div>
+      <div class="pr-row">
+        <span class="av av-b" aria-hidden="true">E</span>
+        <div class="bubble bot">
+          <p class="who">endprs <span class="muted">pushed 1 commit</span></p>
+          <pre><span class="del">-  const name = user.name;</span>
+<span class="add">+  const name = user?.name ?? "Guest";</span></pre>
+          <p class="fixed"><span class="tick" aria-hidden="true"></span>fix: handle signed-out user in profile header</p>
+        </div>
+      </div>
+    </div>
+  )}
+  {kind === "harness" && (
+    <ol class="steps">
+      {steps.map((s, i) => (
+        <li style={`--i:${i}`}><span class="ok" aria-hidden="true"></span>{s}</li>
+      ))}
+    </ol>
+  )}
+  {kind === "trade" && (
+    <div class="trade">
+      <div class="ladder">
+        <p class="sym">DEMO <span class="muted">limit order book</span></p>
+        {book.map((r) => (
+          <p class={`lvl ${r.side}`} style={`--q:${r.qty / 460}`}><span>{r.px}</span><span>{r.qty}</span></p>
+        ))}
+      </div>
+      <svg viewBox="0 0 300 100" class="spark" aria-hidden="true" preserveAspectRatio="none">
+        <path d={path} fill="none" stroke="var(--clip-work)" stroke-width="2" vector-effect="non-scaling-stroke" />
+        <line x1="0" x2="300" y1="30" y2="30" stroke="var(--playhead)" stroke-dasharray="4 4" vector-effect="non-scaling-stroke" />
+      </svg>
+      <p class="fill"><span class="tick" aria-hidden="true"></span>Limit buy filled at 2,417.40</p>
+    </div>
+  )}
+</div>
+
+<style>
+  .poster { aspect-ratio: 16 / 10; border: 1px solid var(--line); border-radius: var(--r-m); background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--clip-project) 16%, transparent), transparent 60%), #16181d;
+    display: grid; place-items: center; padding: clamp(14px, 4%, 36px); overflow: hidden; container-type: inline-size; }
+  .muted { color: var(--muted); font-weight: 400; }
+  .tick { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--clip-work); margin-right: 8px; vertical-align: -2px;
+    -webkit-mask: radial-gradient(circle, #000 0 0) ; }
+
+  .pr { width: 100%; max-width: 560px; display: grid; gap: 14px; font-size: clamp(0.7rem, 2.6cqi, 0.95rem); }
+  .pr-row { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+  .av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: #111; }
+  .av-r { background: var(--clip-study); }
+  .av-b { background: var(--clip-project); }
+  .bubble { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: 10px 12px; display: grid; gap: 6px; }
+  .bubble.bot { border-color: color-mix(in srgb, var(--clip-project) 55%, var(--line)); }
+  .who { font-weight: 680; }
+  code, pre { font-family: var(--mono); font-size: 0.92em; }
+  pre { margin: 0; padding: 8px 10px; background: #111317; border-radius: var(--r-s); overflow: hidden; white-space: pre; line-height: 1.6; }
+  .del { color: #ff8f86; } .add { color: #74e0b0; }
+  .fixed { color: var(--muted); }
+
+  .steps { list-style: none; display: grid; gap: clamp(4px, 1.4cqi, 9px); width: 100%; max-width: 420px; font-size: clamp(0.72rem, 2.7cqi, 1rem); }
+  .steps li { display: flex; align-items: center; gap: 10px; padding: 6px 12px; background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--clip-writing); border-radius: var(--r-s); }
+  .steps li:last-child { border-left-color: var(--clip-work); font-weight: 680; }
+  .ok { width: 12px; height: 12px; flex: none; border-radius: 3px; background: var(--clip-work); }
+
+  .trade { width: 100%; max-width: 560px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 16px; align-items: center; font-size: clamp(0.7rem, 2.5cqi, 0.95rem); }
+  .ladder { display: grid; gap: 3px; font-variant-numeric: tabular-nums; }
+  .sym { font-weight: 700; margin-bottom: 4px; }
+  .lvl { display: flex; justify-content: space-between; padding: 3px 8px; border-radius: 3px; font-family: var(--mono); font-size: 0.9em; position: relative; }
+  .lvl::before { content: ""; position: absolute; inset: 0 0 0 auto; width: calc(var(--q) * 100%); border-radius: 3px; opacity: .22; }
+  .lvl.ask::before { background: #ff8f86; } .lvl.bid::before { background: #74e0b0; }
+  .lvl.ask span:first-child { color: #ff8f86; } .lvl.bid span:first-child { color: #74e0b0; }
+  .spark { width: 100%; height: auto; aspect-ratio: 3 / 1; }
+  .fill { grid-column: 1 / -1; color: var(--muted); }
+</style>

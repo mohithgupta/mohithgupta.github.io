@@ -1,0 +1,93 @@
+---
+// Architecture drawn like a compositing node graph: nodes on a column/row grid, bezier wires between ports.
+import type { GraphNode, GraphEdge, NodeKind } from "../data/projects";
+interface Props { nodes: GraphNode[]; edges: GraphEdge[]; title: string }
+const { nodes, edges, title } = Astro.props;
+
+const W = 168, H = 58, GX = 118, GY = 34, PAD = 18;
+const cols = Math.max(...nodes.map((n) => n.col)) + 1;
+const rows = Math.max(...nodes.map((n) => n.row)) + 1;
+const width = PAD * 2 + cols * W + (cols - 1) * GX;
+const height = PAD * 2 + rows * H + (rows - 1) * GY;
+const pos = (n: GraphNode) => ({ x: PAD + n.col * (W + GX), y: PAD + n.row * (H + GY) });
+const byId = new Map(nodes.map((n) => [n.id, n]));
+const KIND: Record<NodeKind, { color: string; name: string }> = {
+  client: { color: "var(--clip-work)", name: "Interface" },
+  service: { color: "var(--clip-project)", name: "Service" },
+  worker: { color: "#6f8cf0", name: "Worker" },
+  store: { color: "var(--clip-study)", name: "Storage" },
+  external: { color: "var(--faint)", name: "External" },
+  ai: { color: "var(--clip-writing)", name: "Model" },
+};
+const wires = edges.map((e) => {
+  const a = byId.get(e.from)!, b = byId.get(e.to)!;
+  const pa = pos(a), pb = pos(b);
+  let x1: number, y1: number, x2: number, y2: number, d: string;
+  if (a.col === b.col) {
+    // Same column: wire from bottom to top.
+    const down = b.row > a.row;
+    x1 = pa.x + W / 2; y1 = down ? pa.y + H : pa.y; x2 = pb.x + W / 2; y2 = down ? pb.y : pb.y + H;
+    d = `M${x1},${y1} C${x1},${(y1 + y2) / 2} ${x2},${(y1 + y2) / 2} ${x2},${y2}`;
+  } else {
+    const fwd = b.col > a.col;
+    x1 = fwd ? pa.x + W : pa.x; y1 = pa.y + H / 2; x2 = fwd ? pb.x : pb.x + W; y2 = pb.y + H / 2;
+    const dx = Math.max(40, Math.abs(x2 - x1) / 2) * (fwd ? 1 : -1);
+    d = `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}`;
+  }
+  const horiz = a.col !== b.col;
+  return { d, x1, y1, x2, y2, label: e.label, lx: horiz ? (x1 + x2) / 2 : x1 + 8, ly: horiz ? (y1 + y2) / 2 : (y1 + y2) / 2 + 4, anchor: horiz ? "middle" : "start" };
+});
+const kindsUsed = [...new Set(nodes.map((n) => n.kind))];
+---
+<figure class="ng">
+  <div class="ng-scroll" tabindex="0" role="region" aria-label={`${title}, scrollable diagram`}>
+    <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img" aria-label={title}>
+      <defs>
+        <pattern id="ng-dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#3a404b" /></pattern>
+      </defs>
+      <rect width={width} height={height} fill="url(#ng-dots)" />
+      {wires.map((w) => (
+        <g class="ng-wire">
+          <path d={w.d} />
+          {w.label && <text x={w.lx} y={w.ly - 6} text-anchor={w.anchor}>{w.label}</text>}
+        </g>
+      ))}
+      {nodes.map((n) => {
+        const p = pos(n);
+        return (
+          <g class="ng-node" transform={`translate(${p.x},${p.y})`}>
+            <rect width={W} height={H} rx="6" class="ng-box" />
+            <rect width={W} height="5" rx="2" fill={KIND[n.kind].color} />
+            <circle cx="0" cy={H / 2} r="4" class="ng-port" />
+            <circle cx={W} cy={H / 2} r="4" class="ng-port" />
+            <text x="12" y={n.sub ? 27 : 35} class="ng-label">{n.label}</text>
+            {n.sub && <text x="12" y="45" class="ng-sub">{n.sub}</text>}
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+  <figcaption>
+    <span>{title}</span>
+    <ul class="ng-legend">
+      {kindsUsed.map((k) => <li><i style={`background:${KIND[k].color}`}></i>{KIND[k].name}</li>)}
+    </ul>
+  </figcaption>
+</figure>
+
+<style>
+  .ng { margin: 0; border: 1px solid var(--line); border-radius: var(--r-m); background: #1a1d22; overflow: hidden; }
+  .ng-scroll { overflow-x: auto; padding: 6px; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .ng-scroll svg { max-width: none; margin-inline: auto; }
+  @media (min-width: 1000px) { .ng-scroll svg { max-width: 100%; height: auto; } }
+  .ng-wire path { fill: none; stroke: #8b93a1; stroke-width: 1.6; }
+  .ng-wire text { fill: var(--muted); font-family: var(--mono); font-size: 10px; paint-order: stroke; stroke: #1a1d22; stroke-width: 4px; }
+  .ng-box { fill: var(--panel-2); stroke: var(--line); }
+  .ng-port { fill: var(--bg); stroke: #8b93a1; stroke-width: 1.5; }
+  .ng-label { fill: var(--text); font-family: var(--font); font-size: 13.5px; font-weight: 680; font-stretch: 100%; }
+  .ng-sub { fill: var(--muted); font-family: var(--font); font-size: 11px; }
+  figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding: 10px 14px; border-top: 1px solid var(--line); font-size: var(--step--1); color: var(--muted); }
+  .ng-legend { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; }
+  .ng-legend li { display: inline-flex; align-items: center; gap: 6px; }
+  .ng-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+</style>

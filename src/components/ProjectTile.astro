@@ -1,0 +1,44 @@
+---
+import type { Project } from "../data/projects";
+import { fmtRange } from "../data/site";
+import Shot from "./Shot.astro";
+import Poster from "./Poster.astro";
+interface Props { p: Project; size?: "lead" | "normal"; eager?: boolean; level?: 2 | 3 }
+const { p, size = "normal", eager = false, level = 3 } = Astro.props;
+const H = level === 2 ? "h2" : "h3";
+---
+<article class={`tile ${size}`}>
+  <a href={`/work/${p.slug}`} class="tile-link" aria-label={`${p.title}: read the case study`}></a>
+  <div class="tile-media">
+    {p.cover.shot ? <Shot shot={p.cover.shot} label={p.title} eager={eager} sizes={size === "lead" ? "(max-width: 900px) 100vw, 700px" : "(max-width: 900px) 100vw, 420px"} /> : <Poster kind={p.cover.poster!} />}
+  </div>
+  <div class="tile-body">
+    <p class="tile-meta"><span class="kind">{p.kind}</span><span class="tc">{fmtRange(p.start, p.end)}</span></p>
+    <H class="tile-h">{p.title}</H>
+    <p class="tag">{p.tagline}</p>
+    <ul class="chips">{p.stack.slice(0, size === "lead" ? 6 : 4).map((s) => <li class="chip">{s}</li>)}</ul>
+  </div>
+</article>
+
+<style>
+  .tile { position: relative; display: grid; gap: 16px; align-content: start; padding: 14px; border-radius: var(--r-m); border: 1px solid transparent; transition: border-color 0.2s, background 0.2s; }
+  .tile:hover { border-color: var(--line); background: color-mix(in srgb, var(--panel) 60%, transparent); }
+  .tile:has(.tile-link:focus-visible) { outline: 2px solid var(--playhead); outline-offset: 2px; }
+  .tile-link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+  .tile-link:focus-visible { outline: none; }
+  .tile.lead { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: center; gap: clamp(16px, 3vw, 40px); }
+  @media (max-width: 900px) { .tile.lead { grid-template-columns: 1fr; } }
+  .tile-media { aspect-ratio: 16 / 10; border-radius: var(--r-m); overflow: hidden; background: #16181d; border: 1px solid var(--line); position: relative; }
+  .tile-media :global(.monitor) { height: 100%; border: 0; border-radius: 0; display: flex; flex-direction: column; }
+  .tile-media :global(.monitor img) { flex: 1; min-height: 0; object-fit: cover; object-position: top left; }
+  .tile-media :global(.phone) { position: absolute; left: 50%; top: 9%; transform: translateX(-50%); width: 46%; max-width: 250px; }
+  .tile-media :global(.poster) { height: 100%; aspect-ratio: auto; border: 0; border-radius: 0; }
+  .tile.lead .tile-media { aspect-ratio: 16 / 10.4; }
+  .tile-meta { display: flex; gap: 12px; align-items: baseline; color: var(--muted); font-size: var(--step--1); margin-bottom: 6px; }
+  .kind { color: var(--clip-project); font-weight: 600; }
+  .tile-h { font-size: var(--step-2); margin-bottom: 8px; }
+  .lead .tile-h { font-size: var(--step-3); }
+  .tag { color: var(--muted); margin-bottom: 14px; max-width: 46ch; }
+  .lead .tag { font-size: var(--step-1); color: var(--text); }
+  .tile:hover .tile-h { color: #fff; text-decoration: underline; text-decoration-color: var(--playhead); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+</style>

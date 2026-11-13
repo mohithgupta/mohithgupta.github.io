@@ -1,0 +1,18 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Not found">
+  <section class="wrap nf">
+    <p class="tc">Media offline</p>
+    <h1>This clip isn't on the timeline</h1>
+    <p>The page you followed doesn't exist or has moved.</p>
+    <div class="ctas"><a class="btn btn-primary" href="/">Back to the start</a><a class="btn btn-ghost" href="/work">See my work</a></div>
+  </section>
+</Base>
+<style>
+  .nf { min-height: 60vh; display: grid; align-content: center; gap: 18px; padding-block: 80px; }
+  .nf .tc { color: var(--playhead); }
+  h1 { font-size: var(--step-4); max-width: 16ch; }
+  .nf p { color: var(--muted); font-size: var(--step-1); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>

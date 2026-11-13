@@ -1,0 +1,146 @@
+---
+import Base from "../layouts/Base.astro";
+import Timeline from "../components/Timeline.astro";
+import { roles, education, writing, profile, fmtRange, fmtMonth, duration, monthsBetween } from "../data/site";
+import { clips } from "../data/clips";
+
+const skills = [
+  { group: "AI and agents", items: ["Claude Code", "Claude Agent SDK", "Agent skills and subagents", "MCP servers", "Spec-driven development", "Figma-to-code", "LLM APIs", "RAG and evals"] },
+  { group: "Frontend", items: ["React", "TypeScript", "Next.js", "TanStack", "Redux", "Design systems", "Micro-frontends", "Tailwind", "Radix UI", "WebCodecs"] },
+  { group: "Backend and data", items: ["Node.js", "Fastify", "FastAPI", "Python", "PostgreSQL", "pgvector", "Redis", "BullMQ and pg-boss", "SQL and PL/SQL"] },
+  { group: "Quality and delivery", items: ["Playwright", "Vitest", "pytest", "Sentry", "JMeter", "Docker", "Cloudflare", "Vite and Webpack", "Git"] },
+];
+const total = monthsBetween("2022-07", null);
+---
+<Base title="Experience" description="Four and a half years: full stack at Trupeer.ai, and four years at Mastercard building analytics platforms, including two CEO Award winners.">
+  <section class="wrap head">
+    <h1>Experience</h1>
+    <p class="intro">{Math.floor(total / 12)} years and {total % 12} months shipping production software. At Mastercard I learned how large teams ship reliably. At Trupeer I own the whole product, and use agentic AI to do the work of a small team on my own.</p>
+    <div class="tl-wrap">
+      <Timeline clips={clips} writing={writing} label="Drag the playhead through my career" />
+    </div>
+  </section>
+
+  {roles.map((r) => {
+    const ordered = [...r.titles].reverse();
+    return (
+      <section class="role wrap" id={r.id} aria-labelledby={`${r.id}-h`}>
+        <header class="role-head">
+          <div>
+            <p class="tc when">{fmtRange(r.start, r.end)}<span class="muted">, {duration(r.start, r.end)}</span></p>
+            <h2 id={`${r.id}-h`}>{r.company}</h2>
+            <p class="place muted">{r.place}</p>
+          </div>
+          <p class={`mode ${r.titles.length === 1 ? "solo" : "team"}`}>{r.mode}</p>
+        </header>
+
+        <div class="strip" role="list" aria-label="Titles held">
+          {ordered.map((t) => (
+            <div class="seg" role="listitem" style={`flex:${monthsBetween(t.start, t.end)}`}>
+              <span class="seg-t">{t.title}</span>
+              <span class="seg-d tc">{fmtMonth(t.start)}</span>
+            </div>
+          ))}
+        </div>
+
+        <p class="summary">{r.summary}</p>
+
+        <ol class="inits">
+          {r.initiatives.map((it, i) => (
+            <li>
+              <details open={i < 2}>
+                <summary>
+                  <span class="it-title">{it.title}</span>
+                  {it.metric && <span class="metric tc">{it.metric}</span>}
+                  <span class="chev" aria-hidden="true"></span>
+                </summary>
+                <div class="it-body">
+                  <div><h3>Problem</h3><p>{it.problem}</p></div>
+                  <div><h3>What I did</h3><p>{it.did}</p></div>
+                  <div><h3>Outcome</h3><p>{it.outcome}</p>{it.link && <p class="it-link"><a href={it.link.href}>{it.link.label}</a></p>}</div>
+                </div>
+              </details>
+            </li>
+          ))}
+        </ol>
+
+        <ul class="chips">{r.stack.map((s) => <li class="chip">{s}</li>)}</ul>
+      </section>
+    );
+  })}
+
+  <section class="role wrap" id="education" aria-labelledby="edu-h">
+    <header class="role-head">
+      <div>
+        <p class="tc when edu">{fmtRange(education.start, education.end)}</p>
+        <h2 id="edu-h">{education.school}</h2>
+        <p class="place muted">{education.degree}</p>
+      </div>
+    </header>
+  </section>
+
+  <section class="section wrap" aria-labelledby="skills-h">
+    <div class="section-head"><h2 id="skills-h">Toolkit</h2><p>What I reach for, grouped by the job it does.</p></div>
+    <div class="skills">
+      {skills.map((g) => (
+        <div class="sk"><h3>{g.group}</h3><ul class="chips">{g.items.map((s) => <li class="chip">{s}</li>)}</ul></div>
+      ))}
+    </div>
+    <div class="cv">
+      <a class="btn btn-primary" href={profile.links.resume}>Download my résumé</a>
+      <a class="btn btn-ghost" href="/hire">Work with me</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { padding-top: clamp(28px, 5vw, 64px); display: grid; gap: 18px; }
+  h1 { font-size: var(--step-4); }
+  .intro { font-size: var(--step-1); max-width: 62ch; color: var(--muted); }
+  .tl-wrap { margin-top: 12px; }
+
+  .role { padding-block: clamp(56px, 8vw, 104px) 0; scroll-margin-top: 70px; display: grid; gap: 22px; }
+  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+  .role h2 { font-size: var(--step-4); line-height: 0.95; margin-block: 6px; }
+  .when { color: var(--clip-work); font-size: 0.9rem; }
+  .when.edu { color: var(--clip-study); }
+  .place { font-size: var(--step-1); }
+  .mode { padding: 6px 12px; border-radius: var(--r-s); font-size: var(--step--1); font-weight: 600; }
+  .mode.solo { background: color-mix(in srgb, var(--playhead) 16%, transparent); color: #ffb39f; border: 1px solid color-mix(in srgb, var(--playhead) 45%, transparent); }
+  .mode.team { background: color-mix(in srgb, var(--clip-work) 14%, transparent); color: #8ee0d5; border: 1px solid color-mix(in srgb, var(--clip-work) 40%, transparent); }
+
+  .strip { display: flex; gap: 3px; height: 40px; }
+  .seg { min-width: 0; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 12px; border-radius: 4px; background: color-mix(in srgb, var(--clip-work) 88%, #fff); border: 1px solid color-mix(in srgb, var(--clip-work) 60%, #fff); color: #0f1114; }
+  .seg:last-child { background: #5fd3c4; }
+  .seg-t { font-weight: 700; font-size: var(--step--1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .seg-d { font-size: 0.72rem; white-space: nowrap; }
+  @media (max-width: 520px) { .seg-d { display: none; } }
+
+  .summary { font-size: var(--step-1); max-width: 64ch; }
+
+  .inits { list-style: none; border-top: 1px solid var(--line); }
+  .inits > li { border-bottom: 1px solid var(--line); }
+  summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; gap: 16px; align-items: center; padding: 18px 2px; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .it-title { font-size: var(--step-1); font-weight: 700; font-stretch: 110%; line-height: 1.25; }
+  summary:hover .it-title { color: #fff; }
+  .metric { color: var(--playhead); font-size: 0.85rem; white-space: nowrap; padding: 2px 8px; border: 1px solid color-mix(in srgb, var(--playhead) 40%, transparent); border-radius: 3px; }
+  .chev { width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.25s var(--ease); justify-self: center; margin-top: -4px; }
+  details[open] .chev { transform: rotate(-135deg); margin-top: 4px; }
+  @media (max-width: 560px) { summary { grid-template-columns: 1fr 20px; } .metric { grid-column: 1; grid-row: 2; justify-self: start; } }
+  .it-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 28px; padding: 0 2px 24px; }
+  @media (max-width: 800px) { .it-body { grid-template-columns: 1fr; } }
+  details[open] .it-body { animation: open 0.35s var(--ease); }
+  @keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+  .it-body h3 { font-size: 0.8rem; font-weight: 600; font-stretch: 100%; color: var(--faint); margin-bottom: 6px; letter-spacing: 0; }
+  .it-body p { color: var(--muted); }
+  .it-body div:last-child p:first-of-type { color: var(--text); }
+  .it-link { margin-top: 10px; }
+  .it-link a { color: var(--text); }
+
+  .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; }
+  @media (max-width: 700px) { .skills { grid-template-columns: 1fr; } }
+  .sk h3 { font-size: var(--step-1); margin-bottom: 12px; }
+  .sk .chip { font-size: var(--step--1); color: var(--text); }
+  .cv { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+</style>

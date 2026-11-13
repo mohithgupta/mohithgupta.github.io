@@ -1,0 +1,22 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProjectTile from "../../components/ProjectTile.astro";
+import { projects } from "../../data/projects";
+---
+<Base title="Work" description="Case studies: AskMyChats, PanelCut, ssTitles, EndPRs, my agentic harness and more, each with its architecture, decisions and measured results.">
+  <section class="section wrap">
+    <div class="section-head intro">
+      <h1>Work</h1>
+      <p>Every project here was designed, built and shipped by me. Each case study covers the problem, the architecture as a node graph, the decisions I made, and the numbers I measured to know it worked.</p>
+    </div>
+    <div class="bin">
+      {projects.map((p, i) => <ProjectTile p={p} eager={i < 2} level={2} />)}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro h1 { font-size: var(--step-4); }
+  .bin { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(8px, 2vw, 24px); }
+  @media (max-width: 760px) { .bin { grid-template-columns: 1fr; } }
+</style>
