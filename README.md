@@ -5,8 +5,8 @@ Personal site and portfolio of Mohith Korangi. It is built with Astro as a stati
 The design idea is a video editing suite:
 - The home page is one editor, the showreel (`src/components/Reel.astro` and `src/scripts/reel.ts`).
   - On load an assistant prompt types a request and the career clips drop onto the timeline.
-  - The stage then pins, and scrolling moves the playhead through the stops in `src/data/reel.ts`. A program monitor shows each stop as a title card or a screenshot, with a lower-third caption.
-  - Dragging the playhead, clicking a clip, the arrow keys and the play button all move the page scroll, which stays the single source of truth.
+  - Pressing play, dragging the playhead, clicking a clip or using the arrow keys moves the playhead through the stops in `src/data/reel.ts`. Page scroll never moves it.
+  - A program monitor shows each stop as a title card or a screenshot, with a lower-third caption.
   - Time after mid 2025 is stretched on the ruler (dashed line) so the recent projects are readable.
 - The Experience page reads like a changelog: each role is a release (v1.0 study to v4.0 Trupeer) and each initiative a commit.
 - Case-study architecture is drawn as compositing node graphs.

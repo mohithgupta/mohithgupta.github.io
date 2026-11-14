@@ -1,12 +1,10 @@
-// Showreel behaviour: the page scroll drives the playhead through the stops; dragging the
-// playhead, picking a clip, the keyboard and the play button all move the page scroll, so there is one source of truth.
+// Showreel behaviour. The playhead moves only when the visitor asks it to: dragging it, picking a clip,
+// the arrow keys or the play button. Page scroll is left alone (founder, 2026-11-14).
 type Stop = { at: number; clips: string[] };
 type Data = { stops: Stop[]; labels: string[]; T0: number; TB: number; T1: number; SPLIT: number; monthLabels: Record<string, string> };
 
-const HEADER = 60;
-const HOLD = 0.3; // share of each step, at both ends, where the playhead rests on a stop
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
-const ease = (t: number) => t * t * (3 - 2 * t);
+const ease = (t: number) => 1 - Math.pow(1 - t, 3);
 
 export function initReel() {
   const root = document.querySelector<HTMLElement>("[data-reel]");
@@ -16,7 +14,6 @@ export function initReel() {
   const html = document.documentElement;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
-  const stage = $("[data-stage]");
   const area = $("[data-area]");
   const head = $("[data-playhead]");
   const tc = $("[data-tc]");
@@ -30,21 +27,12 @@ export function initReel() {
     const m = f <= d.SPLIT ? d.T0 + (f / d.SPLIT) * (d.TB - d.T0) : d.TB + ((f - d.SPLIT) / (1 - d.SPLIT)) * (d.T1 - d.TB);
     return d.monthLabels[String(clamp(Math.floor(m), d.T0, d.T1 - 1))];
   };
-  const startY = () => root.getBoundingClientRect().top + window.scrollY - HEADER;
-  const range = () => Math.max(1, root.offsetHeight - stage.offsetHeight);
+  // The frame for a playhead position is the last stop at or before it.
+  const stopAt = (x: number) => { let k = 0; for (let i = 0; i < N; i++) if (d.stops[i].at <= x + 0.004) k = i; return k; };
 
-  /* ---- scroll → playhead ---- */
+  let x = 0;
   let active = -1;
-  function render() {
-    const s = clamp((window.scrollY - startY()) / range(), 0, 1);
-    const f = s * (N - 1);
-    const i = Math.min(N - 2, Math.floor(f));
-    const t = f - i;
-    const tt = t < HOLD ? 0 : t > 1 - HOLD ? 1 : ease((t - HOLD) / (1 - 2 * HOLD));
-    const x = d.stops[i].at + (d.stops[i + 1].at - d.stops[i].at) * tt;
-    head.style.left = `${(x * 100).toFixed(3)}%`;
-    tc.textContent = monthAt(x);
-    const k = clamp(Math.round(f), 0, N - 1);
+  function show(k: number) {
     if (k === active) return;
     active = k;
     frames.forEach((el, n) => {
@@ -58,29 +46,36 @@ export function initReel() {
     head.setAttribute("aria-valuenow", String(k));
     head.setAttribute("aria-valuetext", d.labels[k]);
   }
-  let raf = 0;
-  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); }); };
-  window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule);
+  function place(nx: number) {
+    x = clamp(nx, 0, 1);
+    head.style.left = `${(x * 100).toFixed(3)}%`;
+    tc.textContent = monthAt(x);
+  }
 
-  /* ---- everything else → page scroll ---- */
-  const scrollToProgress = (s: number, smooth: boolean) =>
-    window.scrollTo({ top: startY() + clamp(s, 0, 1) * range(), behavior: smooth && !reduced ? "smooth" : "auto" });
-  const goTo = (k: number, smooth = true) => scrollToProgress(clamp(k, 0, N - 1) / (N - 1), smooth);
+  /* ---- move to a stop with a short glide ---- */
+  let anim = 0;
+  function goTo(k: number) {
+    k = clamp(k, 0, N - 1);
+    cancelAnimationFrame(anim);
+    show(k);
+    const from = x, to = d.stops[k].at;
+    if (reduced) return place(to);
+    const t0 = performance.now(), dur = 650;
+    const step = (now: number) => {
+      const t = clamp((now - t0) / dur, 0, 1);
+      place(from + (to - from) * ease(t));
+      if (t < 1) anim = requestAnimationFrame(step);
+    };
+    anim = requestAnimationFrame(step);
+  }
 
+  /* ---- drag the playhead anywhere on the tracks ---- */
   function scrubTo(clientX: number) {
     const r = area.getBoundingClientRect();
-    const x = clamp((clientX - r.left) / r.width, 0, 1);
-    let i = 0;
-    while (i < N - 2 && x > d.stops[i + 1].at) i++;
-    const a = d.stops[i].at, b = d.stops[i + 1].at;
-    const u = b > a ? clamp((x - a) / (b - a), 0, 1) : 0;
-    // Invert the resting curve so the playhead lands under the pointer.
-    const t = u <= 0 ? 0 : u >= 1 ? 1 : HOLD + (1 - 2 * HOLD) * invEase(u);
-    scrollToProgress((i + t) / (N - 1), false);
+    cancelAnimationFrame(anim);
+    place((clientX - r.left) / r.width);
+    show(stopAt(x));
   }
-  const invEase = (y: number) => { let lo = 0, hi = 1; for (let n = 0; n < 20; n++) { const m = (lo + hi) / 2; if (ease(m) < y) lo = m; else hi = m; } return (lo + hi) / 2; };
-
   let dragging = false;
   area.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 || (e.target as HTMLElement).closest("[data-clip]")) return;
@@ -114,7 +109,7 @@ export function initReel() {
     stopPlay();
   });
 
-  /* ---- play: step through the stops until the end or until the visitor takes over ---- */
+  /* ---- play: step through the stops until the end, or until the visitor takes over ---- */
   let timer = 0;
   function stopPlay() {
     if (!timer) return;
@@ -125,26 +120,24 @@ export function initReel() {
   }
   playBtn.addEventListener("click", () => {
     if (timer) return stopPlay();
-    if (active >= N - 1) goTo(0, false);
+    if (active >= N - 1) { show(0); place(0); }
     html.classList.add("reel-playing");
     playBtn.setAttribute("aria-label", "Pause the reel");
     const tick = () => (active >= N - 1 ? stopPlay() : goTo(active + 1));
     tick();
-    timer = window.setInterval(tick, reduced ? 2600 : 2200);
+    timer = window.setInterval(tick, reduced ? 3000 : 2400);
   });
-  ["wheel", "touchstart"].forEach((ev) => window.addEventListener(ev, stopPlay, { passive: true }));
 
-  render();
+  show(0);
+  place(0);
   intro();
 
   /* ---- one-time intro: the assistant types a request, then the clips drop onto the tracks ---- */
   function intro() {
-    if (reduced || window.scrollY > 10) return;
+    if (reduced) return;
     const ask = $("[data-ask]");
-    const name = document.querySelector<HTMLElement>("[data-name]");
     const text = ask.textContent || "";
     html.classList.add("reel-typing", "reel-assembling");
-    if (name) name.style.setProperty("font-stretch", "70%");
     ask.textContent = "";
     let n = 0;
     let done = false;
@@ -152,13 +145,11 @@ export function initReel() {
       if (done) return;
       done = true;
       clearInterval(typer);
-      window.removeEventListener("scroll", finish);
       ask.textContent = text;
       html.classList.remove("reel-typing");
       clipEls.forEach((c, i) => (c.style.transitionDelay = `${i * 70}ms`));
       requestAnimationFrame(() => {
         html.classList.remove("reel-assembling");
-        if (name) name.style.removeProperty("font-stretch");
         setTimeout(() => clipEls.forEach((c) => (c.style.transitionDelay = "")), 1400);
       });
     };
@@ -166,6 +157,5 @@ export function initReel() {
       ask.textContent = text.slice(0, ++n);
       if (n >= text.length) finish();
     }, 34);
-    window.addEventListener("scroll", finish, { once: true, passive: true });
   }
 }

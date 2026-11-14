@@ -123,7 +123,7 @@ export const roles: Role[] = [
     ],
     mode: "Team work: I co-led the UI and QA teams.",
     summary:
-      "Four years on data-intensive analytics products for banks: a founding engineer on a brand-new anomaly detection platform, and a contributor to two platforms that won Mastercard's CEO Award.",
+      "Four years on data-intensive analytics products for banks: a founding engineer on a brand-new anomaly detection platform, and a core contributor to two platforms that won Mastercard's CEO Award.",
     initiatives: [
       {
         title: "Founding engineer on anomaly detection",
@@ -132,7 +132,7 @@ export const roles: Role[] = [
         outcome: "Mastercard's first near real-time anomaly detection platform.",
       },
       {
-        title: "Contributed to two CEO Award-winning platforms",
+        title: "Core contributor to two CEO Award-winning platforms",
         metric: "$50M opportunity",
         problem: "Two global platforms for banks, built by large cross-functional teams on tight timelines.",
         did: "Contributed UI features to both as part of large teams, working closely with product and backend engineers.",
@@ -142,7 +142,7 @@ export const roles: Role[] = [
         title: "Fake-backend and micro-frontend architecture",
         metric: "~30% faster delivery",
         problem: "UI work kept waiting for backend APIs to be ready.",
-        did: "Led the move to a fake-backend architecture that decoupled the UI from API readiness, and built a micro-frontend setup for hosting parent and child apps.",
+        did: "Led the move to a fake-backend architecture that decoupled the UI from API readiness, and maintained a micro-frontend setup for hosting parent and child apps.",
         outcome: "Features shipped about 30% faster, and modular parent and child apps could live in one shell.",
       },
       {

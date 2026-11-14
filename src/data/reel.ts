@@ -1,4 +1,4 @@
-// The home showreel: one editor whose playhead walks through these stops as the page scrolls.
+// The home showreel: one editor whose playhead walks through these stops when the visitor plays or scrubs it.
 // Stops are chronological. Each one parks the playhead at `at` (YYYY-MM) and shows a frame in the program monitor.
 import type { ImageMetadata } from "astro";
 import { roles, education, fmtRange, duration } from "./site";
@@ -47,7 +47,7 @@ export const frames: Frame[] = [
   {
     id: "intro", clips: [], at: "2018-06", track: "intro",
     title: "2018 to now, in one reel",
-    sub: "Scroll to play",
+    sub: "Press play, or pick any clip below",
     body: "Study, four years at Mastercard, a solo run at Trupeer and the products I build on my own time.",
   },
   {
