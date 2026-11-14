@@ -184,17 +184,18 @@ export const writing = [
   { title: "parseInt(0.000005) is 0 but parseInt(0.0000005) is 5. How?", date: "2023-04-17", href: "https://javascript.plainenglish.io/parseint-0-000005-0-whereas-parseint-0-0000005-5-but-how-6e661b0fb99b" },
 ];
 
-export const mediumViews = "60K+";
+export const mediumViews = "70K+";
 
-// The home page shows only the most-read articles, with no dates (founder, 2026-11-14).
-// Order is a placeholder until the founder sends per-article views from Medium stats.
-const TOP_ARTICLES = [
-  "parseInt(0.000005) is 0 but parseInt(0.0000005) is 5. How?",
-  "Did you know x === x can return false?",
-  "useState hook: some points I feel everyone should know",
-  "Do you really know the exact differences between innerHTML, innerText and textContent?",
+// The home page shows the five most-viewed articles, without dates (Medium stats, 2026-11-14).
+// The two Google Drive "download restricted" posts (14.4K and 3.8K views) are left out on purpose:
+// a recruiter-facing page shouldn't lead with getting around a file owner's download block.
+export const topWriting = [
+  { title: "The Best Readme Generators for Your GitHub Profile", views: "21K", href: "https://plainenglish.io/github/the-best-readme-generators-for-your-github-profile-ea4f50559d87" },
+  { title: "How to Handle Unsuccessful Fetch API Calls in JavaScript", views: "11.2K", href: "https://javascript.plainenglish.io/handling-unsuccessful-calls-of-fetch-api-7eef551b74c8" },
+  { title: "I Hacked the Chrome Dinosaur Game. Here's How I Did It.", views: "2.8K", href: "https://javascript.plainenglish.io/an-immortal-dinosaur-and-the-fastest-too-hack-the-dino-game-7c5716c53e8b" },
+  { title: "Data Structures: MULTI_SET vs SET vs UNORDERED_SET", views: "2.2K", href: "https://medium.com/geekculture/data-structures-multi-set-vs-set-vs-unordered-set-bcc4f6609ac9" },
+  { title: "All You Need to Know About the Fetch API in JavaScript", views: "1.7K", href: "https://javascript.plainenglish.io/all-you-need-to-know-about-the-fetch-api-6929930572a8" },
 ];
-export const topWriting = TOP_ARTICLES.map((t) => writing.find((w) => w.title === t)!);
 
 /* ---------- date helpers ---------- */
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

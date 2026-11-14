@@ -52,7 +52,7 @@ const ld = {
     <header class="bar">
       <div class="bar-inner wrap">
         <a class="mark" href="/" aria-label={`${profile.name}, home`}>
-          <span class="mark-clip" aria-hidden="true"></span>
+          <svg class="mark-svg" viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><g fill="none" stroke-linejoin="miter"><path d="M13 6H4v52h9M51 6h9v52h-9" stroke="#ff5b35" stroke-width="5"/><path d="M15 46V18l7 13 7-13v28M36 18v28M49 18 37 33M41 29l9 17" stroke="#eceae4" stroke-width="5"/></g></svg>
           <span class="mark-name">Mohith Korangi</span>
         </a>
         <nav aria-label="Main">
@@ -62,7 +62,7 @@ const ld = {
             ))}
           </ul>
         </nav>
-        <a class="btn btn-primary hire" href="/hire" aria-current={path === "/hire" ? "page" : undefined}>Hire me</a>
+        <a class="btn btn-ghost hire" href="/hire" aria-current={path === "/hire" ? "page" : undefined}>Work with me</a>
       </div>
     </header>
 
@@ -73,7 +73,7 @@ const ld = {
     <footer class="foot">
       <div class="wrap foot-inner">
         {path !== "/hire" && <div class="foot-cta">
-          <p class="foot-kicker">{profile.available}. Tell me what you're building.</p>
+          <p class="foot-kicker">Building something? Tell me about it.</p>
           <div class="foot-mail">
             <a href={`mailto:${profile.email}`} class="foot-email">{profile.email}</a>
             <button class="btn btn-ghost copy" type="button" data-copy={profile.email}>Copy email</button>
@@ -121,18 +121,19 @@ const ld = {
   }
   .bar-inner { display: flex; align-items: center; gap: clamp(12px, 3vw, 36px); height: 60px; }
   .mark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 760; font-stretch: 122%; letter-spacing: -0.01em; }
-  .mark-clip { width: 22px; height: 14px; border-radius: 2px; background: linear-gradient(90deg, var(--clip-work) 0 55%, var(--clip-project) 55%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.18); }
+  .mark-svg { flex: none; }
+  .hire[aria-current="page"] { border-color: var(--playhead); }
   nav { margin-left: auto; }
   nav ul { display: flex; gap: clamp(4px, 1.5vw, 18px); list-style: none; }
   nav a { display: block; padding: 6px 8px; text-decoration: none; color: var(--muted); font-stretch: 108%; border-radius: var(--r-s); }
   nav a:hover { color: var(--text); }
   nav a[aria-current="page"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--playhead); border-radius: 0; }
-  .hire { padding: 0.5em 0.95em; }
+  .hire { padding: 0.5em 0.95em; white-space: nowrap; }
   @media (max-width: 640px) {
     .mark-name { display: none; }
     nav ul { gap: 0; }
     nav a { padding: 6px 6px; font-size: var(--step--1); }
-    .hire { font-size: var(--step--1); }
+    .hire { font-size: var(--step--1); padding: 0.45em 0.7em; }
   }
 
   .foot { border-top: 1px solid var(--line); background: var(--panel); padding-block: clamp(48px, 7vw, 88px) calc(32px + env(safe-area-inset-bottom, 0px)); }

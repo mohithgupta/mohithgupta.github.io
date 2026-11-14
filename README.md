@@ -3,12 +3,14 @@
 Personal site and portfolio of Mohith Korangi. It is built with Astro as a static site and deployed to GitHub Pages by `.github/workflows/deploy.yml`.
 
 The design idea is a video editing suite:
-- The home page opens on a source monitor, which holds the portrait, and a program monitor, which holds the name and pitch.
-- A career timeline runs underneath with a playhead you can drag.
-  - Tracks are colour-coded: work, study, projects and writing.
-  - An inspector lists whatever sits under the playhead.
-  - On load the playhead plays from 2018 to now, and the name widens with it.
+- The home page is one editor, the showreel (`src/components/Reel.astro` and `src/scripts/reel.ts`).
+  - On load an assistant prompt types a request and the career clips drop onto the timeline.
+  - The stage then pins, and scrolling moves the playhead through the stops in `src/data/reel.ts`. A program monitor shows each stop as a title card or a screenshot, with a lower-third caption.
+  - Dragging the playhead, clicking a clip, the arrow keys and the play button all move the page scroll, which stays the single source of truth.
+  - Time after mid 2025 is stretched on the ruler (dashed line) so the recent projects are readable.
+- The Experience page reads like a changelog: each role is a release (v1.0 study to v4.0 Trupeer) and each initiative a commit.
 - Case-study architecture is drawn as compositing node graphs.
+- The logo is MK between an editor's in and out marks (`public/favicon.svg`, inline in `src/layouts/Base.astro`).
 
 ## Edit the content
 
@@ -18,7 +20,8 @@ Content and code are kept apart:
 |---|---|
 | Profile, experience and articles | `src/data/site.ts` |
 | Case studies, including architecture nodes and edges | `src/data/projects.ts` |
-| The timeline (built from both files above) | `src/data/clips.ts` |
+| Timeline clips (built from both files above) | `src/data/clips.ts` |
+| Showreel stops and monitor frames | `src/data/reel.ts` |
 | Screenshots | `src/assets/` (Astro converts them to responsive WebP) |
 | Résumé linked from the site | `public/Mohith_Korangi_Resume.pdf` |
 
