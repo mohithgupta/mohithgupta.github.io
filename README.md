@@ -38,4 +38,4 @@ npm run preview   # serve dist/ on http://localhost:4322
 
 ## Deploy
 
-Push to `main`. GitHub Pages must be set to deploy from GitHub Actions (Settings, then Pages, then Source: GitHub Actions).
+Push to `master`. GitHub Pages must be set to deploy from GitHub Actions (Settings, then Pages, then Source: GitHub Actions).
