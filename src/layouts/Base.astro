@@ -1,0 +1,149 @@
+---
+import "../styles/global.css";
+import { profile } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { title, description = profile.statement, image = "/og.png" } = Astro.props;
+const fullTitle = title ? `${title} | ${profile.name}` : `${profile.name}, ${profile.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const nav = [
+  { href: "/work", label: "Work" },
+  { href: "/experience", label: "Experience" },
+  { href: "/#writing", label: "Writing" },
+];
+const isActive = (href: string) => href !== "/#writing" && (path === href || path.startsWith(href + "/"));
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  jobTitle: "Software Engineer",
+  email: `mailto:${profile.email}`,
+  url: Astro.site?.toString(),
+  address: { "@type": "PostalAddress", addressLocality: "Bengaluru", addressCountry: "IN" },
+  alumniOf: "National Institute of Technology, Warangal",
+  sameAs: [profile.links.github, profile.links.linkedin, profile.links.medium],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#1d2026" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="bar">
+      <div class="bar-inner wrap">
+        <a class="mark" href="/" aria-label={`${profile.name}, home`}>
+          <svg class="mark-svg" viewBox="0 0 64 64" width="26" height="26" aria-hidden="true"><g fill="none" stroke-linejoin="miter"><path d="M13 6H4v52h9M51 6h9v52h-9" stroke="#ff5b35" stroke-width="5"/><path d="M15 46V18l7 13 7-13v28M36 18v28M49 18 37 33M41 29l9 17" stroke="#eceae4" stroke-width="5"/></g></svg>
+          <span class="mark-name">Mohith Korangi</span>
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((n) => (
+              <li><a href={n.href} aria-current={isActive(n.href) ? "page" : undefined}>{n.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+        <a class="btn btn-ghost hire" href="/hire" aria-current={path === "/hire" ? "page" : undefined}>Work with me</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="foot">
+      <div class="wrap foot-inner">
+        {path !== "/hire" && <div class="foot-cta">
+          <p class="foot-kicker">Building something? Tell me about it.</p>
+          <div class="foot-mail">
+            <a href={`mailto:${profile.email}`} class="foot-email">{profile.email}</a>
+            <button class="btn btn-ghost copy" type="button" data-copy={profile.email}>Copy email</button>
+          </div>
+        </div>}
+        <div class="foot-meta">
+          <ul class="foot-links">
+            <li><a href={profile.links.github}>GitHub</a></li>
+            <li><a href={profile.links.linkedin}>LinkedIn</a></li>
+            <li><a href={profile.links.medium}>Medium</a></li>
+            <li><a href={profile.links.resume}>Résumé (PDF)</a></li>
+          </ul>
+          <p class="muted">Designed and built by Mohith, with Astro. {profile.location}.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) => {
+        const label = b.textContent;
+        b.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(b.dataset.copy ?? "");
+            b.textContent = "Copied";
+          } catch {
+            b.textContent = "Press Ctrl+C";
+          }
+          setTimeout(() => (b.textContent = label), 1800);
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip { position: absolute; left: 12px; top: -60px; z-index: 50; background: var(--playhead); color: #1a0d08; padding: 8px 12px; border-radius: var(--r-s); font-weight: 640; }
+  .skip:focus { top: 12px; }
+
+  .bar {
+    position: sticky; top: 0; z-index: 20;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar-inner { display: flex; align-items: center; gap: clamp(12px, 3vw, 36px); height: 60px; }
+  .mark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 760; font-stretch: 122%; letter-spacing: -0.01em; }
+  .mark-svg { flex: none; }
+  .hire[aria-current="page"] { border-color: var(--playhead); }
+  nav { margin-left: auto; }
+  nav ul { display: flex; gap: clamp(4px, 1.5vw, 18px); list-style: none; }
+  nav a { display: block; padding: 6px 8px; text-decoration: none; color: var(--muted); font-stretch: 108%; border-radius: var(--r-s); }
+  nav a:hover { color: var(--text); }
+  nav a[aria-current="page"] { color: var(--text); box-shadow: inset 0 -2px 0 var(--playhead); border-radius: 0; }
+  .hire { padding: 0.5em 0.95em; white-space: nowrap; }
+  @media (max-width: 640px) {
+    .mark-name { display: none; }
+    nav ul { gap: 0; }
+    nav a { padding: 6px 6px; font-size: var(--step--1); }
+    .hire { font-size: var(--step--1); padding: 0.45em 0.7em; }
+  }
+
+  .foot { border-top: 1px solid var(--line); background: var(--panel); padding-block: clamp(48px, 7vw, 88px) calc(32px + env(safe-area-inset-bottom, 0px)); }
+  .foot-inner { display: grid; gap: 40px; }
+  .foot-kicker { font-size: var(--step-1); color: var(--muted); margin-bottom: 14px; }
+  .foot-mail { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; }
+  .foot-email { font-size: clamp(1.25rem, 0.6rem + 4.6vw, 3.1rem); font-weight: 760; font-stretch: 112%; text-decoration: none; overflow-wrap: anywhere; line-height: 1.1; }
+  .foot-email:hover { color: var(--playhead); }
+  .foot-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: var(--step--1); }
+  .foot-links { display: flex; gap: 20px; list-style: none; flex-wrap: wrap; }
+  .foot-links a { color: var(--muted); }
+  .foot-links a:hover { color: var(--text); }
+</style>

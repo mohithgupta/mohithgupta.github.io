@@ -1,0 +1,168 @@
+---
+import Base from "../layouts/Base.astro";
+import { profile, FIGMA_POST } from "../data/site";
+
+const offers = [
+  {
+    title: "Frontends from your designs",
+    body: "Send a Figma file and get production React and TypeScript: responsive, accessible and fast. My Figma-to-code agent pipeline checks its own output against the design and reaches 98–99% visual accuracy.",
+    proof: { label: "How the Figma pipeline works", href: FIGMA_POST },
+  },
+  {
+    title: "Design systems that stay consistent",
+    body: "Tokens, a component library and documentation, plus the lint rules, tests and CI checks that stop off-system UI from being merged. I built Trupeer's in 45 days.",
+    proof: { label: "Trupeer details", href: "/experience#trupeer" },
+  },
+  {
+    title: "AI features you can trust",
+    body: "Vision and language model features with verification against real data, eval sets that gate releases, usage meters and kill switches, so they stay accurate and affordable once real users arrive.",
+    proof: { label: "The ssTitles eval gate", href: "/work/sstitles" },
+  },
+  {
+    title: "Complete products",
+    body: "From the data model to the deploy: auth, background jobs, webhooks, payments-ready plans and limits, testing and monitoring, built and run by one person.",
+    proof: { label: "The AskMyChats architecture", href: "/work/askmychats" },
+  },
+  {
+    title: "Rescue and speed-up",
+    body: "Slow pages, flaky releases, an API layer nobody trusts. I measure first, then fix the architecture, like taking Sentry error coverage from 40% to 95%.",
+    proof: { label: "The API re-architecture", href: "/experience#trupeer" },
+  },
+  {
+    title: "Agentic workflows for your team",
+    body: "Set up Claude Code with skills, hooks and gates so your team ships faster without lowering the bar.",
+    proof: { label: "My own harness", href: "/work/agentic-harness" },
+  },
+];
+const steps = [
+  { title: "A short call", body: "We talk through what you're building, who it's for, your timeline and what done looks like." },
+  { title: "A written plan", body: "You get the scope, milestones, risks and a quote in writing before any work starts." },
+  { title: "Build in the open", body: "Regular demos of working software, readable pull requests and tests from the first day. You always know where things stand." },
+  { title: "Handover", body: "Clean code, documentation, tests and a walkthrough, so your team can carry it on without me." },
+];
+const faqs = [
+  { q: "What kind of projects are a good fit?", a: "New web products and MVPs, frontend rebuilds, design systems, and AI features on top of an existing product. I'm strongest where the interface really matters." },
+  { q: "Do you work with non-technical founders?", a: "Yes. I write plans in plain language, explain trade-offs before you pay for them, and show working software rather than status reports." },
+  { q: "Which time zones do you work with?", a: "I'm in Bengaluru (IST). I work async-first with written updates, and keep a few hours of overlap for calls with Europe and the US." },
+  { q: "How do you price work?", a: "It depends on scope. After the first call I share a written quote, either for a fixed scope or for a block of time." },
+];
+const mailto = `mailto:${profile.email}?subject=${encodeURIComponent("Project enquiry")}`;
+---
+<Base title="Work with me" description="Freelance frontend, design system and AI product development by Mohith Korangi: Figma to production React, LLM features with evals, and complete products.">
+  <section class="wrap hero">
+    <p class="avail"><i></i>{profile.available}</p>
+    <h1>Work with me</h1>
+    <p class="intro">I build the parts of a product people actually touch, and the systems underneath that keep them working. Four and a half years across Mastercard and Trupeer.ai, plus products I've designed and shipped alone.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href={mailto}>Email me about a project</a>
+      <a class="btn btn-ghost" href={profile.links.linkedin}>Message me on LinkedIn</a>
+    </div>
+  </section>
+
+  <section class="section wrap" aria-labelledby="offer-h">
+    <div class="section-head"><h2 id="offer-h">What I can do for you</h2></div>
+    <ul class="offers">
+      {offers.map((o) => (
+        <li>
+          <h3>{o.title}</h3>
+          <p>{o.body}</p>
+          <a href={o.proof.href}>{o.proof.label}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="section band" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head"><h2 id="how-h">How a project runs</h2><p>Four steps, and no surprises in between.</p></div>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li><span class="n tc">{String(i + 1).padStart(2, "0")}</span><h3>{s.title}</h3><p>{s.body}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section wrap proof" aria-labelledby="proof-h">
+    <div class="section-head"><h2 id="proof-h">Why people trust my work</h2></div>
+    <ul class="quotes">
+      <li><p class="big">Weeks</p><p>to move a product onto a new design system or re-architect its API layer, not quarters. One full UI revamp shipped in 45 days.</p></li>
+      <li><p class="big">0 P0 · 0 P1</p><p>The bar I ship to: zero critical incidents while owning frontend and backend, with no QA team behind me.</p></li>
+      <li><p class="big">40% → 95%</p><p>Error coverage after one API re-architecture. Monitoring, observability and test coverage are part of the build, not an afterthought.</p></li>
+      <li><p class="big">2</p><p>CEO Award-winning platforms I was a core contributor to, unlocking a $50M revenue opportunity.</p></li>
+    </ul>
+    <p class="proof-more"><a href="/experience">See where these numbers come from</a></p>
+  </section>
+
+  <section class="section wrap faq" aria-labelledby="faq-h">
+    <div class="section-head"><h2 id="faq-h">Questions people ask</h2></div>
+    <div class="faqs">
+      {faqs.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </div>
+  </section>
+
+  <section class="wrap brief" aria-labelledby="brief-h">
+    <h2 id="brief-h">Tell me about your project</h2>
+    <p>A few lines are enough: what you're building, who it's for, your timeline and a rough budget. I usually reply within a couple of days.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href={mailto}>Email {profile.email}</a>
+      <button class="btn btn-ghost" type="button" data-copy={profile.email}>Copy email</button>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(36px, 7vw, 96px) clamp(16px, 3vw, 32px); display: grid; gap: 20px; }
+  .avail { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: var(--step--1); }
+  .avail i { width: 8px; height: 8px; border-radius: 50%; background: var(--clip-work); box-shadow: 0 0 0 4px color-mix(in srgb, var(--clip-work) 25%, transparent); }
+  h1 { font-size: clamp(3rem, 1.4rem + 7vw, 7rem); font-weight: 820; font-stretch: 122%; line-height: 0.9; letter-spacing: -0.025em; }
+  .intro { font-size: var(--step-1); max-width: 58ch; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .offers { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+  @media (max-width: 960px) { .offers { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 620px) { .offers { grid-template-columns: 1fr; } }
+  .offers li { padding: clamp(20px, 3vw, 32px); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: grid; gap: 10px; align-content: start; }
+  .offers h3 { font-size: var(--step-1); }
+  .offers p { color: var(--muted); }
+  .offers a { font-size: var(--step--1); margin-top: 4px; }
+
+  .band { background: var(--panel); border-block: 1px solid var(--line); }
+  .steps { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; counter-reset: s; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
+  .steps li { padding: 20px; background: var(--bg); border: 1px solid var(--line); border-top: 4px solid var(--clip-project); border-radius: 4px; display: grid; gap: 8px; align-content: start; }
+  .steps li:last-child { border-top-color: var(--clip-work); }
+  .n { color: var(--clip-project); }
+  .steps h3 { font-size: var(--step-1); }
+  .steps p { color: var(--muted); }
+
+  /* 2×2 with a + between the cells: right border on the left column, bottom border on the top row. */
+  .quotes { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quotes li { padding: clamp(24px, 4vw, 48px); display: grid; gap: 12px; align-content: start; }
+  .quotes li:nth-child(odd) { border-right: 1px solid var(--line); padding-left: 0; }
+  .quotes li:nth-child(even) { padding-right: 0; }
+  .quotes li:nth-child(-n + 2) { border-bottom: 1px solid var(--line); padding-top: 8px; }
+  .quotes .big { font-size: var(--step-4); font-weight: 820; font-stretch: 118%; line-height: 1; color: var(--text); }
+  .quotes p:last-child { color: var(--muted); max-width: 40ch; font-size: var(--step-1); }
+  .proof-more { margin-top: 28px; }
+  @media (max-width: 700px) {
+    .quotes { grid-template-columns: minmax(0, 1fr); }
+    .quotes li, .quotes li:nth-child(n) { border-right: 0; border-bottom: 1px solid var(--line); padding: 24px 0; }
+    .quotes li:last-child { border-bottom: 0; }
+  }
+
+  .faqs { border-top: 1px solid var(--line); max-width: 860px; }
+  .faqs details { border-bottom: 1px solid var(--line); }
+  .faqs summary { cursor: pointer; padding: 18px 0; font-size: var(--step-1); font-weight: 650; font-stretch: 108%; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  .faqs summary::-webkit-details-marker { display: none; }
+  .faqs summary::after { content: "+"; color: var(--playhead); font-weight: 400; }
+  .faqs details[open] summary::after { content: "−"; }
+  .faqs p { color: var(--muted); padding-bottom: 20px; max-width: 66ch; }
+
+  .brief { margin-block: 0 clamp(64px, 9vw, 120px); padding: clamp(24px, 5vw, 56px); border: 1px solid var(--line); border-top: 4px solid var(--playhead); border-radius: var(--r-m); background: var(--panel); display: grid; gap: 16px; }
+  .brief h2 { font-size: var(--step-3); }
+  .brief p { color: var(--muted); max-width: 60ch; font-size: var(--step-1); }
+</style>

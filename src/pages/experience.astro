@@ -1,0 +1,178 @@
+---
+import Base from "../layouts/Base.astro";
+import { roles, education, profile, fmtRange, fmtMonth, duration, monthsBetween } from "../data/site";
+
+// The page reads like a product changelog: each role is a release, each initiative a commit.
+// Versions count career steps: v1 study, v2 first job, v3 the promotion, v4 Trupeer.
+const versions: Record<string, { v: string; title: string; start: string }[]> = {
+  trupeer: [{ v: "v4.0", title: roles[0].titles[0].title, start: roles[0].titles[0].start }],
+  mastercard: [
+    { v: "v3.0", title: roles[1].titles[0].title, start: roles[1].titles[0].start },
+    { v: "v2.0", title: roles[1].titles[1].title, start: roles[1].titles[1].start },
+  ],
+};
+// Conventional-commit type for each initiative, in data order.
+const types: Record<string, string[]> = {
+  trupeer: ["feat", "refactor", "feat", "ci", "feat", "test"],
+  mastercard: ["feat", "feat", "refactor", "test", "perf"],
+};
+
+const skills = [
+  { group: "AI and agents", items: ["Claude Code", "Claude Agent SDK", "Agent skills and subagents", "MCP servers", "Spec-driven development", "Figma-to-code", "LLM APIs", "RAG and evals"] },
+  { group: "Frontend", items: ["React", "TypeScript", "Next.js", "TanStack", "Redux", "Design systems", "Micro-frontends", "Tailwind", "Radix UI", "WebCodecs"] },
+  { group: "Backend and data", items: ["Node.js", "Fastify", "FastAPI", "Python", "PostgreSQL", "pgvector", "Redis", "BullMQ and pg-boss", "SQL and PL/SQL"] },
+  { group: "Quality and delivery", items: ["Playwright", "Vitest", "pytest", "Sentry", "JMeter", "Docker", "Cloudflare", "Vite and Webpack", "Git"] },
+];
+const total = monthsBetween("2022-07", null);
+---
+<Base title="Experience" description="Four and a half years: full stack at Trupeer.ai, and four years at Mastercard building analytics platforms, including work on two CEO Award winners.">
+  <section class="wrap head">
+    <h1>Experience</h1>
+    <p class="intro">{Math.floor(total / 12)} years and {total % 12} months shipping production software. At Mastercard I learned how large teams ship reliably. At Trupeer I own the whole product, and use agentic AI to do the work of a small team on my own.</p>
+    <nav class="jump" aria-label="Releases">
+      <a href="#trupeer"><span class="tc">v4.0</span> Trupeer.ai<i class="now-dot" aria-hidden="true"></i></a>
+      <a href="#mastercard"><span class="tc">v3.0</span> Promoted to SE II</a>
+      <a href="#mastercard"><span class="tc">v2.0</span> Mastercard</a>
+      <a href="#education"><span class="tc">v1.0</span> NIT Warangal</a>
+    </nav>
+  </section>
+
+  <div class="log wrap">
+  {roles.map((r) => (
+    <section class="release" id={r.id} aria-labelledby={`${r.id}-h`}>
+      <div class="rail">
+        <div class="rail-in">
+          {versions[r.id].map((v, i) => (
+            <p class={`ver${i ? " old" : ""}`}><span class="tc vtag">{v.v}</span>{!r.end && i === 0 && <span class="now"><i class="now-dot" aria-hidden="true"></i>Now</span>}<span class="vt">{v.title}</span><span class="tc vd">{fmtMonth(v.start)}</span></p>
+          ))}
+          <p class="tc span">{fmtRange(r.start, r.end)}<br /><span class="muted">{duration(r.start, r.end)}, {r.place}</span></p>
+        </div>
+      </div>
+      <div class="notes">
+        <header class="role-head">
+          <h2 id={`${r.id}-h`}>{r.company}</h2>
+          <p class={`mode ${r.titles.length === 1 ? "solo" : "team"}`}>{r.mode}</p>
+        </header>
+        <p class="summary">{r.summary}</p>
+        <ol class="inits">
+          {r.initiatives.map((it, i) => (
+            <li>
+              <details open={i < 2}>
+                <summary>
+                  <span class="type tc">{types[r.id][i] ?? "feat"}</span>
+                  <span class="it-title">{it.title}</span>
+                  {it.metric && <span class="metric tc">{it.metric}</span>}
+                  <span class="chev" aria-hidden="true"></span>
+                </summary>
+                <div class="it-body">
+                  <div><h3>Problem</h3><p>{it.problem}</p></div>
+                  <div><h3>What I did</h3><p>{it.did}</p></div>
+                  <div><h3>Outcome</h3><p>{it.outcome}</p>{it.link && <p class="it-link"><a href={it.link.href}>{it.link.label}</a></p>}</div>
+                </div>
+              </details>
+            </li>
+          ))}
+        </ol>
+        <ul class="chips">{r.stack.map((s) => <li class="chip">{s}</li>)}</ul>
+      </div>
+    </section>
+  ))}
+
+  <section class="release" id="education" aria-labelledby="edu-h">
+    <div class="rail"><div class="rail-in">
+      <p class="ver"><span class="tc vtag">v1.0</span><span class="vt">{education.degree}</span><span class="tc vd">{fmtMonth(education.start)}</span></p>
+      <p class="tc span">{fmtRange(education.start, education.end)}</p>
+    </div></div>
+    <div class="notes">
+      <header class="role-head"><h2 id="edu-h">{education.school}</h2></header>
+      <p class="summary muted">Where it started: engineering at one of India's top NITs, and my first React apps on the side.</p>
+    </div>
+  </section>
+  </div>
+
+  <section class="section wrap" aria-labelledby="skills-h">
+    <div class="section-head"><h2 id="skills-h">Toolkit</h2><p>What I reach for, grouped by the job it does.</p></div>
+    <div class="skills">
+      {skills.map((g) => (
+        <div class="sk"><h3>{g.group}</h3><ul class="chips">{g.items.map((s) => <li class="chip">{s}</li>)}</ul></div>
+      ))}
+    </div>
+    <div class="cv">
+      <a class="btn btn-primary" href={profile.links.resume}>Download my résumé</a>
+      <a class="btn btn-ghost" href="/hire">Work with me</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head { padding-top: clamp(28px, 5vw, 64px); display: grid; gap: 18px; }
+  h1 { font-size: var(--step-4); }
+  .intro { font-size: var(--step-1); max-width: 62ch; color: var(--muted); }
+  .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .jump a { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); text-decoration: none; font-size: var(--step--1); }
+  .jump a:hover { border-color: var(--muted); }
+  .jump .tc { color: var(--muted); }
+  .now-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--playhead); box-shadow: 0 0 0 4px color-mix(in srgb, var(--playhead) 25%, transparent); display: inline-block; }
+
+  /* Release log: a sticky version rail on the left, release notes on the right, one spine through it. */
+  .log { position: relative; padding-top: clamp(40px, 6vw, 72px); }
+  .release { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: clamp(20px, 4vw, 56px); padding-bottom: clamp(56px, 8vw, 96px); scroll-margin-top: 70px; position: relative; }
+  .release::before { content: ""; position: absolute; left: 6px; top: 10px; bottom: 0; width: 1px; background: var(--line); }
+  .release:last-child { padding-bottom: 0; }
+  .release:last-child::before { bottom: auto; height: 40px; }
+  .rail-in { position: sticky; top: 84px; display: grid; gap: 14px; padding-left: 26px; }
+  .ver { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: baseline; position: relative; }
+  .ver::before { content: ""; position: absolute; left: -26px; top: 7px; width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 2px solid var(--clip-work); }
+  #trupeer .ver:first-child::before { background: var(--playhead); border-color: var(--playhead); box-shadow: 0 0 0 5px color-mix(in srgb, var(--playhead) 22%, transparent); }
+  #education .ver::before { border-color: var(--clip-study); }
+  .ver.old::before { width: 9px; height: 9px; left: -24px; top: 8px; border-color: var(--muted); }
+  .vtag { font-size: 1.05rem; color: var(--text); font-weight: 600; }
+  .ver.old .vtag { color: var(--muted); font-size: 0.9rem; }
+  .now { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; color: #ffb39f; justify-self: start; }
+  .vt { grid-column: 1 / -1; font-weight: 650; font-stretch: 106%; line-height: 1.3; }
+  .ver.old .vt { color: var(--muted); font-weight: 500; }
+  .vd { grid-column: 1 / -1; color: var(--faint); font-size: 0.78rem; }
+  .span { font-size: 0.82rem; color: var(--clip-work); line-height: 1.5; border-top: 1px solid var(--line); padding-top: 12px; }
+  #education .span { color: var(--clip-study); }
+  @media (max-width: 820px) {
+    .release { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+    .rail-in { position: static; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  }
+
+  .notes { display: grid; gap: 22px; align-content: start; min-width: 0; }
+  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 16px; border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+  .role-head h2 { font-size: var(--step-4); line-height: 0.95; }
+  #education .role-head h2 { font-size: var(--step-3); }
+  .mode { padding: 6px 12px; border-radius: var(--r-s); font-size: var(--step--1); font-weight: 600; }
+  .mode.solo { background: color-mix(in srgb, var(--playhead) 16%, transparent); color: #ffb39f; border: 1px solid color-mix(in srgb, var(--playhead) 45%, transparent); }
+  .mode.team { background: color-mix(in srgb, var(--clip-work) 14%, transparent); color: #8ee0d5; border: 1px solid color-mix(in srgb, var(--clip-work) 40%, transparent); }
+  .type { font-size: 0.75rem; color: var(--clip-work); width: 9ch; }
+
+  .summary { font-size: var(--step-1); max-width: 64ch; }
+
+  .inits { list-style: none; border-top: 1px solid var(--line); }
+  .inits > li { border-bottom: 1px solid var(--line); }
+  summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto 20px; gap: 16px; align-items: center; padding: 18px 2px; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  .it-title { font-size: var(--step-1); font-weight: 700; font-stretch: 110%; line-height: 1.25; }
+  summary:hover .it-title { color: #fff; }
+  .metric { color: var(--playhead); font-size: 0.85rem; white-space: nowrap; padding: 2px 8px; border: 1px solid color-mix(in srgb, var(--playhead) 40%, transparent); border-radius: 3px; }
+  .chev { width: 10px; height: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.25s var(--ease); justify-self: center; margin-top: -4px; }
+  details[open] .chev { transform: rotate(-135deg); margin-top: 4px; }
+  @media (max-width: 560px) { summary { grid-template-columns: auto minmax(0, 1fr) 20px; } .metric { grid-column: 2; grid-row: 2; justify-self: start; } .chev { grid-column: 3; grid-row: 1; } }
+  .it-body { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 28px; padding: 0 2px 24px; }
+  @media (max-width: 800px) { .it-body { grid-template-columns: 1fr; } }
+  details[open] .it-body { animation: open 0.35s var(--ease); }
+  @keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+  .it-body h3 { font-size: 0.8rem; font-weight: 600; font-stretch: 100%; color: var(--faint); margin-bottom: 6px; letter-spacing: 0; }
+  .it-body p { color: var(--muted); }
+  .it-body div:last-child p:first-of-type { color: var(--text); }
+  .it-link { margin-top: 10px; }
+  .it-link a { color: var(--text); }
+
+  .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 40px; }
+  @media (max-width: 700px) { .skills { grid-template-columns: 1fr; } }
+  .sk h3 { font-size: var(--step-1); margin-bottom: 12px; }
+  .sk .chip { font-size: var(--step--1); color: var(--text); }
+  .cv { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+</style>

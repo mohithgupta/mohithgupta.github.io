@@ -1,0 +1,160 @@
+---
+import Base from "../../layouts/Base.astro";
+import Shot from "../../components/Shot.astro";
+import Poster from "../../components/Poster.astro";
+import NodeGraph from "../../components/NodeGraph.astro";
+import { projects, type Project } from "../../data/projects";
+import { fmtRange } from "../../data/site";
+
+export function getStaticPaths() {
+  return projects.map((p, i) => ({ params: { slug: p.slug }, props: { p, next: projects[(i + 1) % projects.length] } }));
+}
+interface Props { p: Project; next: Project }
+const { p, next } = Astro.props;
+const sections = [
+  { id: "problem", label: "Problem" },
+  { id: "architecture", label: "Architecture" },
+  { id: "decisions", label: "Decisions" },
+  { id: "hard-parts", label: "Hard parts" },
+  { id: "quality", label: "Quality" },
+];
+---
+<Base title={`${p.title} case study`} description={`${p.title}: ${p.tagline} Architecture, decisions and measured results.`}>
+  <article class="cs">
+    <header class="wrap cs-head">
+      <p class="back"><a href="/work">All work</a></p>
+      <p class="meta"><span class="kind">{p.kind}</span><span class="tc">{fmtRange(p.start, p.end)}</span><span class="access">{p.access}</span></p>
+      <h1>{p.title}</h1>
+      <p class="tagline">{p.tagline}</p>
+      {p.links.length > 0 && (
+        <div class="links">{p.links.map((l, i) => <a class={`btn ${i ? "btn-ghost" : "btn-primary"}`} href={l.href}>{l.label}</a>)}</div>
+      )}
+    </header>
+
+    <div class="wrap cover">
+      {p.cover.shot ? <Shot shot={p.cover.shot} label={p.title} eager sizes="(max-width: 1240px) 100vw, 1180px" /> : <Poster kind={p.cover.poster!} />}
+    </div>
+
+    <div class="wrap intro">
+      <p class="overview">{p.overview}</p>
+      <div class="inspector">
+        <p class="insp-title" id="measured">Measured</p>
+        <dl aria-labelledby="measured">
+          {p.stats.map((s) => (
+            <div class="insp-row"><dt>{s.label}</dt><dd class="tc">{s.value}</dd></div>
+          ))}
+        </dl>
+      </div>
+    </div>
+
+    <div class="wrap body">
+      <nav class="markers" aria-label="On this page">
+        <p class="markers-title">Markers</p>
+        <ol>{sections.map((s) => <li><a href={`#${s.id}`}>{s.label}</a></li>)}</ol>
+        <ul class="chips stack">{p.stack.map((s) => <li class="chip">{s}</li>)}</ul>
+      </nav>
+
+      <div class="content">
+        <section id="problem">
+          <h2>Problem</h2>
+          <p class="lede">{p.problem}</p>
+        </section>
+
+        <section id="architecture">
+          <h2>Architecture</h2>
+          <NodeGraph nodes={p.nodes} edges={p.edges} title={p.graphTitle} />
+          <p class="flow">{p.flow}</p>
+          {p.gallery?.map((g) => <div class="gallery"><Shot shot={g} label={p.title} /></div>)}
+        </section>
+
+        <section id="decisions">
+          <h2>Decisions</h2>
+          <ul class="rows">
+            {p.decisions.map((d) => (
+              <li><h3>{d.title}</h3><p>{d.why}</p></li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="hard-parts">
+          <h2>Hard parts</h2>
+          <ul class="rows">
+            {p.hard.map((h) => (
+              <li><h3>{h.title}</h3><p>{h.body}</p></li>
+            ))}
+          </ul>
+        </section>
+
+        <section id="quality">
+          <h2>Quality</h2>
+          <ul class="checks">{p.quality.map((q) => <li>{q}</li>)}</ul>
+        </section>
+
+      </div>
+    </div>
+
+    <nav class="wrap nextp" aria-label="Next project">
+      <a href={`/work/${next.slug}`}>
+        <span class="muted">Next project</span>
+        <span class="nt">{next.title}</span>
+        <span class="muted">{next.tagline}</span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .cs-head { padding-top: clamp(28px, 5vw, 64px); display: grid; gap: 14px; }
+  .back a { color: var(--muted); font-size: var(--step--1); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; color: var(--muted); font-size: var(--step--1); }
+  .kind { color: var(--clip-project); font-weight: 600; }
+  .access { padding: 1px 8px; border: 1px solid var(--line); border-radius: 3px; }
+  h1 { font-size: var(--step-4); font-stretch: 122%; letter-spacing: -0.02em; }
+  .tagline { font-size: var(--step-2); font-weight: 500; font-stretch: 100%; line-height: 1.25; max-width: 30ch; color: var(--muted); }
+  .links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+  .cover { margin-top: clamp(24px, 4vw, 48px); }
+  .cover :global(.poster) { aspect-ratio: auto; height: clamp(300px, 42vw, 480px); }
+  .cover :global(.poster > *) { transform: scale(1.18); transform-origin: center; }
+  @media (max-width: 700px) { .cover :global(.poster > *) { transform: none; } }
+
+  .intro { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, 1fr); gap: clamp(20px, 4vw, 56px); margin-top: clamp(28px, 5vw, 56px); align-items: start; }
+  @media (max-width: 860px) { .intro { grid-template-columns: 1fr; } }
+  .overview { font-size: var(--step-1); line-height: 1.6; max-width: 62ch; }
+  .inspector dl { margin: 0; }
+  .inspector { margin: 0; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--panel); overflow: hidden; }
+  .insp-title { padding: 8px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line); font-size: 0.75rem; color: var(--muted); }
+  .insp-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 12px 14px; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .insp-row:last-child { border-bottom: 0; }
+  .insp-row dt { color: var(--muted); font-size: var(--step--1); line-height: 1.4; }
+  .insp-row dd { margin: 0; color: var(--text); font-size: 1.05rem; text-align: right; white-space: nowrap; }
+
+  .body { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: clamp(24px, 5vw, 72px); margin-top: clamp(48px, 7vw, 96px); }
+  @media (max-width: 860px) { .body { grid-template-columns: 1fr; } .markers { position: static !important; } .markers ol { display: none; } .markers-title { display: none; } }
+  .markers { position: sticky; top: 84px; align-self: start; display: grid; gap: 14px; }
+  .markers-title { font-size: 0.75rem; color: var(--faint); }
+  .markers ol { list-style: none; display: grid; gap: 2px; border-left: 1px solid var(--line); }
+  .markers a { display: block; padding: 4px 12px; color: var(--muted); text-decoration: none; border-left: 2px solid transparent; margin-left: -1px; font-size: var(--step--1); }
+  .markers a:hover { color: var(--text); border-left-color: var(--playhead); }
+  .stack { margin-top: 6px; }
+
+  .content { display: grid; gap: clamp(48px, 7vw, 88px); min-width: 0; }
+  .content section { scroll-margin-top: 84px; display: grid; gap: 20px; }
+  .content h2 { font-size: var(--step-3); }
+  .lede { font-size: var(--step-1); line-height: 1.6; max-width: 64ch; }
+  .flow { max-width: 68ch; color: var(--muted); font-size: var(--step-0); }
+  .gallery { margin-top: 8px; }
+  .rows { list-style: none; border-top: 1px solid var(--line); }
+  .rows li { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 12px 32px; padding: 22px 0; border-bottom: 1px solid var(--line); }
+  @media (max-width: 700px) { .rows li { grid-template-columns: 1fr; } }
+  .rows h3 { font-size: var(--step-1); font-stretch: 108%; line-height: 1.3; }
+  .rows p { color: var(--muted); max-width: 62ch; }
+  .checks { list-style: none; display: grid; gap: 12px; }
+  .checks li { position: relative; padding-left: 28px; max-width: 66ch; }
+  .checks li::before { content: ""; position: absolute; left: 0; top: 0.45em; width: 14px; height: 9px; border-left: 2px solid var(--clip-work); border-bottom: 2px solid var(--clip-work); transform: rotate(-45deg); }
+
+  .nextp { margin-block: clamp(64px, 9vw, 120px) clamp(48px, 7vw, 80px); }
+  .nextp a { display: grid; gap: 6px; padding: clamp(20px, 4vw, 40px); border: 1px solid var(--line); border-radius: var(--r-m); background: var(--panel); text-decoration: none; }
+  .nextp a:hover { border-color: var(--muted); }
+  .nt { font-size: var(--step-3); font-weight: 780; font-stretch: 120%; line-height: 1.05; }
+  .nextp a:hover .nt { color: var(--playhead); }
+</style>

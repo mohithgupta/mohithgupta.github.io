@@ -1,0 +1,29 @@
+---
+// A screenshot shown inside a "program monitor" (desktop) or a phone body.
+import { Image } from "astro:assets";
+import type { Shot } from "../data/projects";
+interface Props { shot: Shot; label?: string; eager?: boolean; sizes?: string }
+const { shot, label, eager = false, sizes = "(max-width: 900px) 100vw, 760px" } = Astro.props;
+---
+{shot.frame === "phone" ? (
+  <div class="phone">
+    <Image src={shot.src} alt={shot.alt} widths={[320, 480, 720]} sizes="(max-width: 600px) 60vw, 300px" loading={eager ? "eager" : "lazy"} />
+  </div>
+) : (
+  <div class="monitor">
+    <div class="monitor-bar" aria-hidden="true">
+      <span class="dot"></span><span class="mlabel">{label ?? "Program"}</span>
+    </div>
+    <Image src={shot.src} alt={shot.alt} widths={[480, 800, 1280, 1920]} sizes={sizes} loading={eager ? "eager" : "lazy"} />
+  </div>
+)}
+
+<style>
+  .monitor { border: 1px solid var(--line); border-radius: var(--r-m); background: #111317; overflow: hidden; }
+  .monitor-bar { display: flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--playhead); }
+  .mlabel { font-size: 0.72rem; color: var(--muted); }
+  .monitor img { width: 100%; height: auto; }
+  .phone { width: min(300px, 72%); margin-inline: auto; padding: 10px; border-radius: 36px; background: #0e0f12; border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,.7); }
+  .phone img { border-radius: 27px; width: 100%; height: auto; }
+</style>

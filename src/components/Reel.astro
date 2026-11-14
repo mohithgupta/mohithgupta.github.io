@@ -1,0 +1,296 @@
+---
+// The home showreel: hero and career timeline in one editor.
+// Without JS it is a static editor showing the intro frame and every clip as a link.
+// With JS (src/scripts/reel.ts) the playhead moves through `frames` on play, drag, clip clicks and arrow keys.
+import { Image, getImage } from "astro:assets";
+import Poster from "./Poster.astro";
+import { frames } from "../data/reel";
+import { clips } from "../data/clips";
+import { profile, fmtRange, fmtMonth } from "../data/site";
+import { bySlug } from "../data/projects";
+
+/* ---- time scale: 2018–mid 2025 is compressed, mid 2025–2026 is stretched, so recent work is readable ---- */
+const idx = (ym: string) => { const [y, m] = ym.split("-").map(Number); return y * 12 + (m - 1); };
+const T0 = idx("2018-06"), TB = idx("2025-06"), T1 = idx("2027-01");
+const SPLIT = 0.3; // share of the width given to 2018-06 → 2025-06
+const X = (m: number) => (m <= TB ? ((m - T0) / (TB - T0)) * SPLIT : SPLIT + ((m - TB) / (T1 - TB)) * (1 - SPLIT));
+const pct = (f: number) => `${(f * 100).toFixed(3)}%`;
+const NOW = "2026-11";
+const mEnd = (ym: string | null) => idx(ym ?? NOW) + 1;
+
+const TRACKS = [
+  { id: "project", code: "V3", name: "Projects" },
+  { id: "work", code: "V2", name: "Work" },
+  { id: "study", code: "V1", name: "Study" },
+] as const;
+
+const thumbs: Record<string, string> = {};
+for (const c of clips.filter((c) => c.track === "project")) {
+  const shot = bySlug(c.id).cover.shot;
+  if (shot) thumbs[c.id] = (await getImage({ src: shot.src, width: 160, format: "webp" })).src;
+}
+
+const rows = TRACKS.map((t) => {
+  const lanes: number[] = [];
+  const placed = clips
+    .filter((c) => c.track === t.id)
+    .sort((a, b) => idx(a.start) - idx(b.start))
+    .map((c) => {
+      const s = idx(c.start);
+      let lane = lanes.findIndex((end) => end <= s);
+      if (lane === -1) { lane = lanes.length; lanes.push(0); }
+      lanes[lane] = mEnd(c.end);
+      return { ...c, lane, stop: frames.findIndex((f) => f.clips.includes(c.id)) };
+    });
+  // One-month clips can't fit their name, so it goes outside, on the side of the lane with more free room.
+  const withSide = placed.map((c) => {
+    const s = idx(c.start), e = mEnd(c.end);
+    if (s < TB || e - s > 1) return { ...c, side: "" };
+    const same = placed.filter((o) => o.lane === c.lane && o.id !== c.id);
+    const left = s - Math.max(T0, ...same.filter((o) => mEnd(o.end) <= s).map((o) => mEnd(o.end)));
+    const right = Math.min(T1, ...same.filter((o) => idx(o.start) >= e).map((o) => idx(o.start))) - e;
+    return { ...c, side: left > right ? " narrow at-end" : " narrow" };
+  });
+  return { ...t, placed: withSide, lanes: Math.max(1, lanes.length) };
+});
+
+const years = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026];
+const months = Array.from({ length: T1 - TB }, (_, i) => TB + i);
+const stops = frames.map((f, i) => ({ at: i === frames.length - 1 ? X(idx(NOW) + 0.95) : i === 0 ? 0 : X(idx(f.at) + 0.5), clips: f.clips }));
+const label = (m: number) => fmtMonth(`${Math.floor(m / 12)}-${String((m % 12) + 1).padStart(2, "0")}`);
+const stopLabels = frames.map((f, i) => (i === 0 ? "Start" : f.track === "end" ? `Now, ${fmtMonth(NOW)}` : `${f.title}, ${fmtMonth(f.at)}`));
+---
+<section class="reel" data-reel aria-labelledby="hero-name" style={`--stops:${frames.length}`}>
+  <div class="stage" data-stage>
+    <div class="intro">
+      <h1 id="hero-name" class="name"><span class="ln"><span>Mohith</span></span> <span class="ln"><span>Korangi</span></span></h1>
+      <p class="claim">I build video editors, design systems and AI products, end to end.</p>
+      <p class="role">Software Engineer (Full Stack) at Trupeer.ai. Four years at Mastercard before that.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="/work">See my work</a>
+        <a class="btn btn-ghost" href={profile.links.resume}>Résumé (PDF)</a>
+      </div>
+      <div class="assist" aria-hidden="true">
+        <p class="assist-h"><span class="spark"></span>Assistant</p>
+        <p class="ask"><span data-ask>Cut Mohith's last eight years into one reel.</span><i class="caret"></i></p>
+        <p class="done" data-done>Placed {clips.length} clips on 3 tracks. Press play to watch it.</p>
+      </div>
+    </div>
+
+    <div class="monitor">
+      <div class="mon-bar">
+        <span class="mon-l"><i class="rec" aria-hidden="true"></i>Program</span>
+        <output class="tc" data-tc>{fmtMonth("2018-06")}</output>
+      </div>
+      <div class="screen">
+        {frames.map((f, i) => (
+          <article class={`frame f-${f.track}${f.image || f.poster ? " has-visual" : ""}`} data-frame={i} inert={i > 0} aria-hidden={i > 0 ? "true" : undefined}>
+            <div class="visual">
+              {f.image && <Image src={f.image.src} alt={f.image.alt} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 820px" class={f.image.phone ? "phone" : ""} />}
+              {f.poster && <Poster kind={f.poster} />}
+              {!f.image && !f.poster && f.metrics && (
+                <ul class="metrics">{f.metrics.map((m) => <li><span class="mv">{m.value}</span><span class="ml">{m.label}</span></li>)}</ul>
+              )}
+              {f.track === "intro" && <p class="slate"><span>2018</span><span class="arrow" aria-hidden="true"></span><span>now</span></p>}
+            </div>
+            <div class="third">
+              <div class="t-text">
+                <p class="t-title">{f.title}</p>
+                <p class="t-sub">{f.sub}</p>
+                <p class="t-body">{f.body}</p>
+                {(f.image || f.poster) && f.metrics?.[0] && <p class="t-metric"><b>{f.metrics[0].value}</b> {f.metrics[0].label}</p>}
+              </div>
+              {f.href && <a class="t-cta" href={f.href}>{f.cta}</a>}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="tl">
+      <div class="tl-bar">
+        <button class="tl-play" type="button" data-play aria-label="Play the reel">
+          <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path class="i-play" d="M4 2.5v11l9-5.5z" fill="currentColor" /><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor" /></svg>
+        </button>
+        <span class="tl-hint">Press play, drag the playhead or pick a clip</span>
+        <a class="tl-skip" href="/experience">Full experience</a>
+      </div>
+      <div class="tl-body">
+        <div class="tl-heads" aria-hidden="true">
+          <div class="tl-ruler-head"></div>
+          {rows.map((r) => <div class={`tl-head t-${r.id}`} style={`--lanes:${r.lanes}`}><span class="tc">{r.code}</span><span class="hn">{r.name}</span></div>)}
+        </div>
+        <div class="tl-area" data-area>
+          <div class="tl-ruler">
+            {years.map((y) => <span class={`yr tc${[2019, 2022, 2025, 2026].includes(y) ? " key" : ""}`} style={`left:${pct(X(idx(`${y}-01`)))}`}>{y}</span>)}
+            {months.map((m) => <span class="mo" style={`left:${pct(X(m))}`}></span>)}
+            <span class="remap" style={`left:${pct(SPLIT)}`} title="Time is stretched after mid 2025"></span>
+          </div>
+          {rows.map((r) => (
+            <div class={`tl-track t-${r.id}`} style={`--lanes:${r.lanes}`}>
+              {r.placed.map((c) => (
+                <a class={`clip pre${c.side}`} href={c.href} data-clip={c.id} data-stop={c.stop}
+                  style={`left:${pct(X(idx(c.start)))};width:${pct(X(mEnd(c.end)) - X(idx(c.start)))};--lane:${c.lane}${thumbs[c.id] ? `;--thumb:url(${thumbs[c.id]})` : ""}`}
+                  aria-label={`${c.title}, ${c.sub}, ${fmtRange(c.start, c.end)}`}>
+                  <span class="clip-name">{c.title}</span>
+                </a>
+              ))}
+            </div>
+          ))}
+          <div class="playhead" data-playhead role="slider" tabindex="0" aria-label="Reel playhead"
+            aria-valuemin="0" aria-valuemax={frames.length - 1} aria-valuenow="0" aria-valuetext={stopLabels[0]}>
+            <span class="ph-cap" aria-hidden="true"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" data-reel-data set:html={JSON.stringify({ stops, labels: stopLabels, T0, TB, T1, SPLIT, monthLabels: Object.fromEntries(Array.from({ length: T1 - T0 }, (_, i) => [T0 + i, label(T0 + i)])) })} />
+</section>
+
+<script>
+  import { initReel } from "../scripts/reel";
+  initReel();
+</script>
+
+<style>
+  /* ---------- stage: intro + monitor on top, timeline across the bottom ---------- */
+  .reel { position: relative; }
+  .stage { width: min(var(--max), 100% - 2 * var(--gutter)); margin-inline: auto; padding-block: 14px 18px;
+    display: grid; gap: 12px; grid-template-columns: minmax(0, 0.95fr) minmax(0, 2fr); grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas: "intro monitor" "tl tl"; }
+  .stage { height: calc(100svh - 60px); min-height: 560px; }
+  .intro { grid-area: intro; display: flex; flex-direction: column; gap: 14px; justify-content: safe center; min-height: 0; overflow: hidden; }
+  .monitor { grid-area: monitor; }
+  .tl { grid-area: tl; }
+
+  .name { font-size: min(clamp(2.6rem, 1rem + 4.4vw, 5.2rem), 10svh); line-height: 0.88; font-weight: 820; font-stretch: 125%; letter-spacing: -0.025em; }
+  /* Each line rises out of its own mask once on load. */
+  .ln { display: block; overflow: hidden; padding: 0.1em 0 0.16em; margin: -0.1em 0 -0.16em; }
+  .ln > span { display: inline-block; animation: rise 0.9s var(--ease) both; }
+  .ln + .ln > span { animation-delay: 0.09s; }
+  .claim { animation: fade 0.8s var(--ease) 0.25s both; }
+  @keyframes rise { from { transform: translateY(108%); } }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } }
+  .claim { font-size: var(--step-1); font-weight: 600; font-stretch: 104%; max-width: 30ch; line-height: 1.3; }
+  .role { color: var(--muted); max-width: 40ch; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .assist { margin-top: 6px; border: 1px solid var(--line); border-radius: var(--r-m); background: var(--panel); padding: 10px 12px; display: grid; gap: 6px; font-size: var(--step--1); }
+  .assist-h { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .spark { width: 9px; height: 9px; border-radius: 2px; background: var(--clip-project); transform: rotate(45deg); }
+  .ask { font-family: var(--mono); color: var(--text); }
+  .ask::before { content: "> "; color: var(--playhead); }
+  .caret { display: inline-block; width: 7px; height: 1em; vertical-align: -2px; background: var(--playhead); margin-left: 2px; animation: caret 1s steps(2, start) infinite; }
+  @keyframes caret { to { opacity: 0; } }
+  .done { color: var(--clip-work); }
+  .done::before { content: "✓ "; }
+  :global(.reel-typing) .done { visibility: hidden; }
+  :global(.reel-on:not(.reel-typing)) .caret { display: none; }
+
+  /* ---------- program monitor ---------- */
+  .monitor { display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: var(--r-m); background: #0f1114; overflow: hidden; }
+  .mon-bar { display: flex; justify-content: space-between; align-items: center; height: 30px; flex: none; padding: 0 12px; background: var(--panel-2); border-bottom: 1px solid var(--line); font-size: 0.75rem; color: var(--muted); }
+  .mon-l { display: inline-flex; align-items: center; gap: 8px; }
+  .rec { width: 8px; height: 8px; border-radius: 50%; background: var(--playhead); }
+  .mon-bar .tc { color: var(--text); }
+  .screen { position: relative; flex: 1; min-height: 0; container-type: size; }
+  .frame { position: absolute; inset: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; opacity: 0; transition: opacity 0.35s var(--ease); }
+  .frame[data-frame="0"] { opacity: 1; }
+  :global(.reel-on) .frame { opacity: 0; }
+  :global(.reel-on) .frame.on { opacity: 1; }
+  .visual { position: relative; min-height: 0; display: grid; place-items: center; padding: clamp(10px, 3cqh, 28px) clamp(12px, 3cqw, 36px) 0; overflow: hidden; }
+  .visual :global(img) { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 6px; border: 1px solid var(--line); box-shadow: 0 24px 50px -28px #000; }
+  .visual :global(img.phone) { border-radius: 18px; }
+  .visual :global(.poster) { height: 100%; max-width: 100%; aspect-ratio: 16 / 10; width: auto; }
+  .f-work .visual, .f-study .visual, .f-intro .visual, .f-end .visual { background: radial-gradient(90% 120% at 85% 0%, color-mix(in srgb, var(--c, var(--playhead)) 22%, transparent), transparent 62%); }
+  .f-work { --c: var(--clip-work); } .f-study { --c: var(--clip-study); } .f-project { --c: var(--clip-project); }
+  .metrics { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(10px, 3cqw, 32px); width: 100%; }
+  .metrics li { display: grid; gap: 4px; border-left: 3px solid var(--c); padding-left: 12px; }
+  .mv { font-size: clamp(1.3rem, 4cqw, 3rem); font-weight: 820; font-stretch: 112%; line-height: 1; white-space: nowrap; }
+  .ml { color: var(--muted); font-size: var(--step--1); max-width: 22ch; }
+  .slate { display: flex; align-items: center; gap: clamp(10px, 3cqw, 28px); font-size: clamp(2.2rem, 11cqw, 6.4rem); font-weight: 820; font-stretch: 125%; line-height: 1; }
+  .arrow { width: clamp(40px, 12cqw, 140px); height: 4px; background: var(--playhead); position: relative; }
+  .arrow::after { content: ""; position: absolute; right: -2px; top: 50%; translate: 0 -50%; border: 10px solid transparent; border-left: 14px solid var(--playhead); border-right: 0; }
+
+  /* lower third: the caption bar a broadcast puts over footage */
+  .third { display: flex; gap: 18px; align-items: flex-end; justify-content: space-between; padding: clamp(10px, 2.4cqh, 18px) clamp(12px, 3cqw, 28px) clamp(12px, 3cqh, 20px); border-top: 1px solid var(--line); background: linear-gradient(90deg, color-mix(in srgb, var(--c, var(--playhead)) 14%, #15171b), #15171b 60%); }
+  .t-text { display: grid; gap: 2px; min-width: 0; }
+  .t-title { font-size: clamp(1.2rem, 3.4cqw, 2rem); font-weight: 780; font-stretch: 115%; line-height: 1.1; }
+  .t-sub { font-family: var(--mono); font-size: 0.78rem; color: var(--c, var(--playhead)); }
+  .t-body { color: var(--muted); max-width: 62ch; font-size: var(--step--1); }
+  .t-metric { font-size: var(--step--1); color: var(--muted); }
+  .t-metric b { color: var(--text); font-stretch: 112%; }
+  .t-cta { flex: none; white-space: nowrap; padding: 0.5em 0.9em; border: 1px solid var(--line); border-radius: var(--r-s); background: var(--panel-2); text-decoration: none; font-weight: 640; font-size: var(--step--1); }
+  .t-cta:hover { border-color: var(--playhead); }
+  .f-end .t-cta { background: var(--playhead); color: #1a0d08; border-color: transparent; }
+  @container (max-height: 300px) { .t-body { display: none; } }
+  @container (max-width: 560px) { .third { flex-wrap: wrap; gap: 8px; } .t-metric { display: none; } .t-cta { padding: 0.35em 0.75em; } .t-body { font-size: 0.8rem; } }
+
+  /* ---------- timeline ---------- */
+  .tl { border: 1px solid var(--line); border-radius: var(--r-m); background: var(--panel); overflow: hidden; }
+  .tl-bar { display: flex; align-items: center; gap: 12px; height: 34px; padding: 0 8px; border-bottom: 1px solid var(--line); background: var(--panel-2); font-size: 0.78rem; }
+  .tl-play { width: 30px; height: 24px; display: grid; place-items: center; border: 0; border-radius: var(--r-s); background: var(--playhead); color: #1a0d08; cursor: pointer; }
+  .tl-play:hover { background: #ff7655; }
+  .tl-play .i-pause, :global(.reel-playing) .tl-play .i-play { display: none; }
+  :global(.reel-playing) .tl-play .i-pause { display: inline; }
+  .tl-hint { color: var(--muted); }
+  .tl-skip { margin-left: auto; color: var(--muted); }
+  .tl-skip:hover { color: var(--text); }
+  .tl-body { display: grid; grid-template-columns: 82px minmax(0, 1fr); }
+  .tl-heads { border-right: 1px solid var(--line); background: var(--panel-2); }
+  .tl-ruler-head, .tl-ruler { height: 22px; border-bottom: 1px solid var(--line); }
+  .tl-head { height: calc(var(--lanes) * 22px + 8px); display: flex; align-items: center; gap: 8px; padding: 0 10px; border-bottom: 1px solid var(--line); font-size: 0.75rem; color: var(--muted); }
+  .tl-head:last-child, .tl-track:last-of-type { border-bottom: 0; }
+  .tl-head .tc { color: var(--text); font-weight: 600; }
+  .t-project { --c: var(--clip-project); } .t-work { --c: var(--clip-work); } .t-study { --c: var(--clip-study); }
+  .tl-head::before { content: ""; width: 3px; align-self: stretch; margin-block: 7px; border-radius: 2px; background: var(--c); }
+
+  .tl-area { position: relative; touch-action: pan-y; cursor: ew-resize; user-select: none; -webkit-user-select: none; }
+  .tl-ruler { position: relative; }
+  .yr { position: absolute; top: 4px; font-size: 0.68rem; color: var(--muted); padding-left: 4px; border-left: 1px solid var(--line); line-height: 14px; }
+  .mo { position: absolute; bottom: 0; width: 1px; height: 5px; background: var(--line); }
+  .remap { position: absolute; top: 0; bottom: -400px; width: 0; border-left: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent); pointer-events: none; z-index: 1; }
+  .tl-track { position: relative; height: calc(var(--lanes) * 22px + 8px); border-bottom: 1px solid var(--line); }
+
+  .clip { position: absolute; top: calc(4px + var(--lane) * 22px); height: 19px; min-width: 6px; border-radius: 3px; overflow: hidden; text-decoration: none;
+    background-color: color-mix(in srgb, var(--c) 72%, #111);
+    background-image: var(--thumb, none), linear-gradient(90deg, transparent calc(100% - 1px), rgba(0,0,0,.25) 0);
+    background-size: auto 100%, 34px 100%; background-repeat: repeat-x; background-blend-mode: soft-light, normal;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); display: flex; align-items: center;
+    transition: transform 0.45s var(--ease), opacity 0.45s, box-shadow 0.2s, filter 0.2s; transform-origin: left center; }
+  .clip-name { padding: 0 6px; font-size: 0.68rem; font-weight: 650; color: #0e1012; white-space: nowrap; text-shadow: 0 0 6px rgba(255,255,255,.35); }
+  .clip:hover, .clip:focus-visible { filter: brightness(1.15); }
+  /* one-month clips: the name sits beside the clip instead of being cut off */
+  .clip.narrow { overflow: visible; }
+  .clip.narrow .clip-name { position: absolute; left: 100%; color: var(--text); text-shadow: none; padding-left: 5px; }
+  .clip.narrow.at-end .clip-name { left: auto; right: 100%; padding: 0 5px 0 0; }
+  .clip.live { box-shadow: inset 0 0 0 1px #fff, 0 0 0 1px #fff; filter: brightness(1.12); z-index: 1; }
+  :global(.reel-assembling) .clip.pre { transform: scaleX(0.02) translateY(-14px); opacity: 0; }
+
+  .playhead { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; margin-left: -1px; background: var(--playhead); z-index: 3; cursor: grab; outline: none; }
+  .playhead::before { content: ""; position: absolute; inset: 0 -9px; } /* wider hit area */
+  .ph-cap { position: absolute; top: 0; left: 50%; translate: -50% 0; width: 13px; height: 15px; background: var(--playhead); clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%); }
+  .playhead:focus-visible .ph-cap { outline: 2px solid #fff; outline-offset: 2px; }
+  :global(.reel-dragging) .playhead { cursor: grabbing; }
+
+  /* ---------- smaller screens: one column; the stage stays pinned ---------- */
+  @media (max-width: 900px) {
+    .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "intro" "monitor" "tl"; gap: 10px; padding-block: 10px 12px; }
+    .intro { gap: 8px; }
+    .name { font-size: clamp(2.1rem, 1.2rem + 5vw, 3.4rem); }
+    .ln { display: inline-block; }
+    .claim { font-size: var(--step-0); max-width: none; }
+    .role, .assist { display: none; }
+    .ctas .btn { padding: 0.5em 0.9em; font-size: var(--step--1); }
+    .monitor { min-height: 200px; }
+    .tl-body { grid-template-columns: 40px minmax(0, 1fr); }
+    .tl-head .hn, .tl-hint, .yr:not(.key) { display: none; }
+    .tl-head { padding: 0 6px; }
+    .clip-name { font-size: 0.62rem; padding: 0 4px; }
+  }
+  @media (max-width: 900px) and (max-height: 700px) { .ctas { display: none; } }
+  /* Short desktop windows: drop the extras so the intro column never overflows. */
+  @media (min-width: 901px) and (max-height: 860px) { .role { display: none; } .intro { gap: 10px; } }
+  @media (min-width: 901px) and (max-height: 720px) { .assist { display: none; } }
+</style>

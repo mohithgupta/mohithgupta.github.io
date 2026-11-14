@@ -1,0 +1,84 @@
+---
+// A project card: a small monitor window (title bar + footage) above the caption.
+// Every project gets the same window, whether its cover is a desktop screenshot, a phone shot or a drawn poster.
+import { Image } from "astro:assets";
+import type { Project } from "../data/projects";
+import { fmtRange } from "../data/site";
+import Poster from "./Poster.astro";
+interface Props { p: Project; size?: "lead" | "normal"; eager?: boolean; level?: 2 | 3 }
+const { p, size = "normal", eager = false, level = 3 } = Astro.props;
+const H = level === 2 ? "h2" : "h3";
+const shot = p.cover.shot;
+---
+<article class={`card ${size}`}>
+  <a href={`/work/${p.slug}`} class="card-link" aria-label={`${p.title}: read the case study`}></a>
+  <div class="win">
+    <div class="win-bar" aria-hidden="true">
+      <span class="dot"></span><span class="wl">{p.title}</span><span class="wr tc">{p.kind}</span>
+    </div>
+    <div class={`stage s-${shot ? shot.frame : "poster"}`}>
+      {shot && shot.frame === "desktop" && (
+        <Image src={shot.src} alt={shot.alt} widths={[480, 800, 1280]} sizes={size === "lead" ? "(max-width: 900px) 100vw, 800px" : "(max-width: 900px) 100vw, 420px"} loading={eager ? "eager" : "lazy"} />
+      )}
+      {shot && shot.frame === "phone" && (
+        <div class="phone"><Image src={shot.src} alt={shot.alt} widths={[320, 480]} sizes="260px" loading={eager ? "eager" : "lazy"} /></div>
+      )}
+      {!shot && <Poster kind={p.cover.poster!} />}
+    </div>
+  </div>
+  <div class="body">
+    <p class="meta tc">{fmtRange(p.start, p.end)}</p>
+    <H class="tile-h">{p.title}</H>
+    <p class="tag">{p.tagline}</p>
+    {size === "lead" && (
+      <dl class="stats">{p.stats.map((st) => <div><dt>{st.label}</dt><dd>{st.value}</dd></div>)}</dl>
+    )}
+    <ul class="chips">{p.stack.slice(0, size === "lead" ? 6 : 3).map((s) => <li class="chip">{s}</li>)}</ul>
+    {size === "lead" && <span class="go" aria-hidden="true">Read the case study</span>}
+  </div>
+</article>
+
+<style>
+  .card { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 8px; border-radius: 14px; border: 1px solid var(--line);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, var(--clip-project)), var(--panel) 40%);
+    transition: transform 0.25s var(--ease), border-color 0.25s, box-shadow 0.25s; }
+  .card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--clip-project) 55%, var(--line)); box-shadow: 0 24px 48px -30px rgba(0, 0, 0, 0.9); }
+  .card:has(.card-link:focus-visible) { outline: 2px solid var(--playhead); outline-offset: 3px; }
+  .card-link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+  .card-link:focus-visible { outline: none; }
+
+  .win { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; background: #111317; }
+  .win-bar { display: flex; align-items: center; gap: 8px; height: 28px; flex: none; padding: 0 10px; background: var(--panel-2); border-bottom: 1px solid var(--line); font-size: 0.72rem; color: var(--muted); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--playhead); }
+  .wl { color: var(--text); font-weight: 600; }
+  .wr { margin-left: auto; color: var(--clip-project); }
+  .stage { position: relative; flex: 1 0 auto; aspect-ratio: 16 / 10; overflow: hidden;
+    background: radial-gradient(110% 90% at 85% 0%, color-mix(in srgb, var(--clip-project) 18%, transparent), transparent 60%), #14161a; }
+  .stage :global(img) { transition: transform 0.6s var(--ease); }
+  .s-desktop :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+  .phone { position: absolute; left: 50%; top: 9%; translate: -50% 0; width: 42%; max-width: 230px; padding: 7px; border-radius: 26px; background: #0b0c0f; border: 1px solid var(--line); box-shadow: 0 30px 50px -24px #000; }
+  .phone :global(img) { width: 100%; height: auto; border-radius: 20px; }
+  .s-poster :global(.poster) { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; border: 0; border-radius: 0; background: transparent; }
+  .card:hover .stage :global(img) { transform: scale(1.025); }
+
+  .body { display: grid; gap: 6px; padding: 16px 12px 10px; }
+  .meta { color: var(--faint); }
+  .tile-h { font-size: var(--step-2); }
+  .tag { color: var(--muted); max-width: 46ch; }
+  .chips { margin-top: 8px; }
+  .go { margin-top: 10px; font-size: var(--step--1); color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+  .card:hover .go { color: var(--text); text-decoration-color: var(--playhead); }
+
+  .lead .tile-h { font-size: var(--step-3); }
+  .lead .tag { font-size: var(--step-1); color: var(--text); }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 14px 0 6px; border-block: 1px solid var(--line); }
+  .stats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; padding: 14px 14px 14px 0; }
+  .stats div + div { padding-left: 14px; border-left: 1px solid var(--line); }
+  .stats dd { margin: 0; font-size: var(--step-2); font-weight: 800; font-stretch: 115%; line-height: 1; color: var(--clip-project); }
+  .stats dt { color: var(--muted); font-size: var(--step--1); }
+  @media (max-width: 560px) { .stats { grid-template-columns: minmax(0, 1fr); } .stats div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } }
+  .normal .stage { aspect-ratio: 16 / 9; }
+  .tile-h { transition: color 0.2s; }
+  .card:hover .tile-h { color: #fff; text-decoration: underline; text-decoration-color: var(--playhead); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+  @media (max-width: 1000px) { .lead .stage { aspect-ratio: 16 / 10; min-height: 0; } }
+</style>
