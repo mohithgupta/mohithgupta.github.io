@@ -4,7 +4,7 @@ import Base from "../layouts/Base.astro";
 import Timeline from "../components/Timeline.astro";
 import ProjectTile from "../components/ProjectTile.astro";
 import portrait from "../assets/portrait.png";
-import { profile, roles, writing, mediumViews, fmtRange, duration } from "../data/site";
+import { profile, roles, topWriting, mediumViews, fmtRange, duration } from "../data/site";
 import { projects, featured, bySlug } from "../data/projects";
 import { clips } from "../data/clips";
 
@@ -17,7 +17,7 @@ const services = [
 ];
 const highlights = [
   { role: roles[0], points: ["Revamped the product UI and built its design system in 45 days", "Re-architected the API layer: Sentry coverage 40% → 95%", "Zero P0 and zero P1 incidents with no dedicated QA"] },
-  { role: roles[1], points: ["Founding engineer on the first near real-time anomaly detection platform", "Two CEO Award-winning platforms, a $50M revenue opportunity", "Co-led UI and QA teams of 9+, with 50% faster app performance"] },
+  { role: roles[1], points: ["Founding engineer on the first near real-time anomaly detection platform", "Contributed to two CEO Award-winning platforms, a $50M revenue opportunity", "Co-led UI and QA teams of 9+, with 50% faster app performance"] },
 ];
 ---
 <Base>
@@ -40,7 +40,7 @@ const highlights = [
         </div>
       </div>
     </div>
-    <Timeline clips={clips} writing={writing} autoplay label="Career timeline, drag to scrub" />
+    <Timeline clips={clips} autoplay label="Career timeline, drag to scrub" />
   </section>
 
   <section class="section wrap" aria-labelledby="work-h">
@@ -91,13 +91,14 @@ const highlights = [
   <section class="section wrap" id="writing" aria-labelledby="writing-h">
     <div class="section-head">
       <h2 id="writing-h">Writing</h2>
-      <p>Short, practical JavaScript and React explainers on Medium, read {mediumViews} times.</p>
+      <p>Short, practical JavaScript and React explainers on Medium, read {mediumViews} times. These are the most read.</p>
     </div>
     <ol class="posts">
-      {writing.map((w) => (
-        <li><a href={w.href}><span class="tc">{w.date.slice(0, 7)}</span><span class="pt">{w.title}</span></a></li>
+      {topWriting.map((w) => (
+        <li><a href={w.href}><span class="pt">{w.title}</span><span class="go" aria-hidden="true">Read on Medium</span></a></li>
       ))}
     </ol>
+    <p class="all-posts"><a href={profile.links.medium}>All articles on Medium</a></p>
   </section>
 </Base>
 
@@ -157,7 +158,10 @@ const highlights = [
   .role-card:hover .go { color: var(--text); text-decoration-color: var(--playhead); }
 
   .posts { list-style: none; border-top: 1px solid var(--line); }
-  .posts a { display: grid; grid-template-columns: 9ch 1fr; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none; align-items: baseline; }
+  .posts a { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); text-decoration: none; align-items: baseline; }
   .posts a:hover .pt { color: #fff; text-decoration: underline; text-decoration-color: var(--clip-writing); }
-  .posts .tc { color: var(--clip-writing); }
+  .posts .pt { font-size: var(--step-1); font-weight: 620; font-stretch: 104%; }
+  .posts .go { color: var(--clip-writing); font-size: var(--step--1); white-space: nowrap; }
+  .all-posts { margin-top: 18px; color: var(--muted); }
+  @media (max-width: 560px) { .posts a { grid-template-columns: 1fr; gap: 4px; } }
 </style>

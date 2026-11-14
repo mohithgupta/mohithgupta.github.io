@@ -17,7 +17,7 @@ export const clips: Clip[] = [
       end: t.end,
       blurb: r.id === "trupeer" ? "Revamped the product UI, re-architected the API layer, zero P0 and P1 incidents." :
         t.title.endsWith("II") ? "Founding engineer on anomaly detection; co-led UI and QA teams of 9+." :
-        "Joined out of college; built UI for two CEO Award-winning platforms.",
+        "Joined out of college; contributed UI to two CEO Award-winning platforms.",
       href: `/experience#${r.id}`,
     })),
   ),

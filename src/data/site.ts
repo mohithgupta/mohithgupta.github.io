@@ -123,7 +123,7 @@ export const roles: Role[] = [
     ],
     mode: "Team work: I co-led the UI and QA teams.",
     summary:
-      "Four years building data-intensive analytics products for banks, from a brand-new anomaly detection platform to two platforms that won Mastercard's CEO Award.",
+      "Four years on data-intensive analytics products for banks: a founding engineer on a brand-new anomaly detection platform, and a contributor to two platforms that won Mastercard's CEO Award.",
     initiatives: [
       {
         title: "Founding engineer on anomaly detection",
@@ -132,10 +132,10 @@ export const roles: Role[] = [
         outcome: "Mastercard's first near real-time anomaly detection platform.",
       },
       {
-        title: "Two CEO Award-winning platforms",
+        title: "Contributed to two CEO Award-winning platforms",
         metric: "$50M opportunity",
         problem: "Two global platforms for banks, built by large cross-functional teams on tight timelines.",
-        did: "Built UI features on both, working closely with product and backend engineers.",
+        did: "Contributed UI features to both as part of large teams, working closely with product and backend engineers.",
         outcome: "Both won the CEO Award, Mastercard's highest honour, unlocking a $50M revenue opportunity projected to drive $100M a year.",
       },
       {
@@ -185,6 +185,16 @@ export const writing = [
 ];
 
 export const mediumViews = "60K+";
+
+// The home page shows only the most-read articles, with no dates (founder, 2026-11-14).
+// Order is a placeholder until the founder sends per-article views from Medium stats.
+const TOP_ARTICLES = [
+  "parseInt(0.000005) is 0 but parseInt(0.0000005) is 5. How?",
+  "Did you know x === x can return false?",
+  "useState hook: some points I feel everyone should know",
+  "Do you really know the exact differences between innerHTML, innerText and textContent?",
+];
+export const topWriting = TOP_ARTICLES.map((t) => writing.find((w) => w.title === t)!);
 
 /* ---------- date helpers ---------- */
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

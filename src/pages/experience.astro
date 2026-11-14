@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import Timeline from "../components/Timeline.astro";
-import { roles, education, writing, profile, fmtRange, fmtMonth, duration, monthsBetween } from "../data/site";
+import { roles, education, profile, fmtRange, fmtMonth, duration, monthsBetween } from "../data/site";
 import { clips } from "../data/clips";
 
 const skills = [
@@ -12,12 +12,12 @@ const skills = [
 ];
 const total = monthsBetween("2022-07", null);
 ---
-<Base title="Experience" description="Four and a half years: full stack at Trupeer.ai, and four years at Mastercard building analytics platforms, including two CEO Award winners.">
+<Base title="Experience" description="Four and a half years: full stack at Trupeer.ai, and four years at Mastercard building analytics platforms, including work on two CEO Award winners.">
   <section class="wrap head">
     <h1>Experience</h1>
     <p class="intro">{Math.floor(total / 12)} years and {total % 12} months shipping production software. At Mastercard I learned how large teams ship reliably. At Trupeer I own the whole product, and use agentic AI to do the work of a small team on my own.</p>
     <div class="tl-wrap">
-      <Timeline clips={clips} writing={writing} label="Drag the playhead through my career" />
+      <Timeline clips={clips} label="Drag the playhead through my career" />
     </div>
   </section>
 

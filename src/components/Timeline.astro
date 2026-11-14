@@ -44,7 +44,7 @@ const lanesFor = (list: Clip[]) => {
       return { ...c, lane };
     });
 };
-const rows = TRACKS.map((t) => {
+const rows = TRACKS.filter((t) => t.id !== "writing" || writing.length).map((t) => {
   const placed = lanesFor(clips.filter((c) => c.track === t.id));
   return { ...t, placed, laneCount: Math.max(1, ...placed.map((p) => p.lane + 1)) };
 });

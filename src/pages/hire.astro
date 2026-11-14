@@ -86,9 +86,10 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent("Project en
   <section class="section wrap proof" aria-labelledby="proof-h">
     <div class="section-head"><h2 id="proof-h">Why people trust my work</h2></div>
     <ul class="quotes">
+      <li><p class="big">45 days</p><p>to move Trupeer's whole product onto a design system and component library I built from scratch, kept consistent across repos by CI checks.</p></li>
       <li><p class="big">0 P0, 0 P1</p><p>production incidents while owning Trupeer's frontend and backend, with no QA team.</p></li>
       <li><p class="big">40% → 95%</p><p>Sentry error coverage after I re-architected Trupeer's API layer.</p></li>
-      <li><p class="big">2</p><p>CEO Award-winning platforms I helped build at Mastercard.</p></li>
+      <li><p class="big">2</p><p>CEO Award-winning platforms I contributed to at Mastercard.</p></li>
     </ul>
   </section>
 
@@ -137,8 +138,9 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent("Project en
   .steps h3 { font-size: var(--step-1); }
   .steps p { color: var(--muted); }
 
-  .quotes { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
-  @media (max-width: 760px) { .quotes { grid-template-columns: 1fr; } }
+  .quotes { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 1px solid var(--line); }
+  @media (max-width: 1000px) { .quotes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .quotes { grid-template-columns: 1fr; } }
   .quotes li { padding: 24px 24px 24px 0; display: grid; gap: 8px; align-content: start; }
   .quotes .big { font-size: var(--step-3); font-weight: 800; font-stretch: 118%; line-height: 1; color: var(--text); }
   .quotes p:last-child { color: var(--muted); max-width: 32ch; }
